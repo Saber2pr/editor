@@ -1,0 +1,107 @@
+.ButtonHigh {
+  cursor: pointer;
+  border-color: #20232a;
+  background-color: #373940;
+  color: #d5d5d7;
+  border: 1px solid;
+  border-radius: 3px;
+  line-height: 1.5rem;
+  padding: 0 16px;
+  word-break: keep-all;
+  margin-right: 1px;
+}
+
+.ButtonHigh:hover {
+  background-color: #20232a;
+  color: #61dafb;
+}
+
+.ButtonHigh-Active {
+  background-color: #20232a;
+  color: #61dafb;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow: hidden;
+  background-color: #f7f7f7;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.App {
+  height: 100vh;
+  display: flex;
+}
+
+.Main {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.Aside {
+  flex-grow: 1;
+  position: relative;
+}
+
+.Aside > iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  position: absolute;
+}
+
+.Aside-Btn {
+  float: left;
+  width: 1px;
+  height: 100%;
+  background: #e0e0e0;
+}
+
+.Aside-Size {
+  position: absolute;
+  display: none;
+  font-size: 2rem;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding-top: 30vh;
+  color: #80808085;
+}
+
+.Aside-Btn::after {
+  content: "";
+  cursor: ew-resize;
+  display: block;
+  height: 100%;
+  width: 8px;
+  position: fixed;
+  margin-left: -3px;
+  z-index: 10;
+}
+
+.Aside-Run {
+  border-bottom: 1px solid #ececec;
+}
+
+.ToolBar {
+  border-bottom: 1px solid #ececec;
+}
+
+.ToolBar > button {
+  float: left;
+}
+
+.ToolBar select {
+  float: right;
+  height: calc(1.5rem + 2px);
+}
+
+.Editor {
+  flex-grow: 1;
+}

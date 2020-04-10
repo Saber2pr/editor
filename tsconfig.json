@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "jsxFactory": "TSX",
+    "declaration": true,
+    "outDir": "lib",
+    "lib": ["dom", "ESNext"]
+  },
+  "exclude": ["node_modules", "lib"]
+}
