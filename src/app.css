@@ -71,7 +71,8 @@ html {
   height: 100%;
   text-align: center;
   padding-top: 30vh;
-  color: #80808085;
+	color: #80808085;
+	user-select: none;
 }
 
 .Aside-Btn::after {
@@ -89,12 +90,21 @@ html {
   border-bottom: 1px solid #ececec;
 }
 
+.Aside iframe {
+  background: white;
+  border-left: 1px solid #80808085;
+}
+
 .ToolBar {
   border-bottom: 1px solid #ececec;
 }
 
 .ToolBar > button {
   float: left;
+}
+
+.ToolBar .Download {
+  float: right;
 }
 
 .ToolBar select {

@@ -8,13 +8,20 @@ import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import { createEditor, EditorAPI } from "./createEditor"
 import "./app.css"
 
+// KEYS
+const __LS_JS__ = "__EDITOR_JS__"
+const __LS_CSS__ = "__EDITOR_CSS__"
+const __LS_HTML__ = "__EDITOR_HTML__"
+const __LS_EDITOR_WIDTH__ = "__EDITOR_EDITOR_WIDTH__"
+const __LS_EDITOR_THEME__ = "__EDITOR_EDITOR_THEME__"
+
 const defaults = {
-  typescript: localStorage.getItem("js") || `// input code here...\n`,
-  css: localStorage.getItem("css"),
-  html: localStorage.getItem("html")
+  javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
+  css: localStorage.getItem(__LS_CSS__),
+  html: localStorage.getItem(__LS_HTML__)
 }
 
-const debounce = (callback: Function, delta = 300, id = "default") => {
+const debounce = (callback: Function, delta = 1000, id = "default") => {
   clearTimeout(debounce[id])
   debounce[id] = setTimeout(callback, delta)
 }
@@ -48,31 +55,33 @@ const App = () => {
   const ref = useRef<"main">()
   const sec_ref = useRef<"section">()
   const output_ref = useRef<"iframe">()
-  const _theme = localStorage.getItem("theme") as any
+  const _theme = localStorage.getItem(__LS_EDITOR_THEME__) as any
+
+  let current = "js"
 
   useEffect(() => {
     editor = createEditor(ref.current, defaults)
     window["editor"] = editor.getInstance()
     editorHeight = editor.getSize().height
 
-    const _width = localStorage.getItem("editorWidth")
+    const _width = localStorage.getItem(__LS_EDITOR_WIDTH__)
     _theme && setTheme(_theme)
     _width && setEditorSize(Number(_width), editorHeight)
   })
 
   const run = () => {
-    const js = editor.getValue("typescript")
+    const js = editor.getValue("javascript")
     const html = editor.getValue("html")
     const css = editor.getValue("css")
 
-    js && localStorage.setItem("js", js)
-    html && localStorage.setItem("html", html)
-    css && localStorage.setItem("css", css)
+    js && localStorage.setItem(__LS_JS__, js)
+    html && localStorage.setItem(__LS_HTML__, html)
+    css && localStorage.setItem(__LS_CSS__, css)
 
     output_ref.current.srcdoc = `<style>${editor.getValue(
       "css"
     )}</style>${editor.getValue("html")}<script>${editor.getValue(
-      "typescript"
+      "javascript"
     )}</script>`
   }
 
@@ -88,7 +97,7 @@ const App = () => {
 
   const setTheme = (theme: "vs" | "vs-dark" | "hc-black") => {
     editor.setTheme(theme)
-    localStorage.setItem("theme", theme)
+    localStorage.setItem(__LS_EDITOR_THEME__, theme)
     if (theme === "vs") {
       document.body.style.background = "#ececec"
     } else {
@@ -100,7 +109,32 @@ const App = () => {
     sec_ref.current.style.width = width + "px"
     editor.setSize(width, height)
     asideSize_ref.current.textContent = `${docWidth - width} x ${height}`
-    localStorage.setItem("editorWidth", String(width))
+    localStorage.setItem(__LS_EDITOR_WIDTH__, String(width))
+  }
+
+  const dl_ref = useRef<"a">()
+
+  function download() {
+    const aLink = dl_ref.current
+    let fileName: string
+    let content: string
+    const tp = Date.now()
+
+    if (current === "js") {
+      fileName = `main_${tp}.js`
+      content = editor.getValue("javascript")
+    } else if (current === "css") {
+      fileName = `style_${tp}.css`
+      content = editor.getValue("css")
+    } else if (current === "html") {
+      fileName = `index_${tp}.html`
+      content = editor.getValue("html")
+    }
+
+    const blob = new Blob([content])
+    aLink.download = fileName
+    aLink.href = URL.createObjectURL(blob)
+    aLink.click()
   }
 
   return (
@@ -112,6 +146,7 @@ const App = () => {
             onclick={e => {
               editor.changeModel("html")
               activeBtn(e.target)
+              current = "html"
             }}
           >
             HTML
@@ -121,6 +156,7 @@ const App = () => {
             onclick={e => {
               editor.changeModel("css")
               activeBtn(e.target)
+              current = "css"
             }}
           >
             CSS
@@ -128,11 +164,19 @@ const App = () => {
           <button
             className="ButtonHigh ButtonHigh-Active"
             onclick={e => {
-              editor.changeModel("typescript")
+              editor.changeModel("javascript")
               activeBtn(e.target)
+              current = "js"
             }}
           >
             JS
+          </button>
+          <button
+            className="ButtonHigh"
+            style={{ float: "right" }}
+            onclick={download}
+          >
+            Download
           </button>
           <select
             className="ButtonHigh"
@@ -149,7 +193,7 @@ const App = () => {
             </option>
           </select>
         </nav>
-        <main className="Editor" ref={ref} oninput={() => debounce(run)} />
+        <main className="Editor" ref={ref} onkeydown={() => debounce(run)} />
       </section>
       <aside className="Aside">
         <div
@@ -168,7 +212,7 @@ const App = () => {
                 output_ref.current.style.display = "block"
                 asideSize_ref.current.style.display = "none"
                 localStorage.setItem(
-                  "editorWidth",
+                  __LS_EDITOR_WIDTH__,
                   sec_ref.current.style.width.replace("px", "")
                 )
               }
@@ -184,7 +228,8 @@ const App = () => {
               float: "right",
               lineHeight: "1.5rem",
               color: "#80808085",
-              wordBreak: "break-all"
+              wordBreak: "break-all",
+              userSelect: "none"
             }}
           >
             v0.0.1 by saber2pr&nbsp;
@@ -193,6 +238,7 @@ const App = () => {
         <iframe ref={output_ref} />
         <div className="Aside-Size" ref={asideSize_ref} />
       </aside>
+      <a ref={dl_ref} />
     </div>
   )
 }
