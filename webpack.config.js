@@ -42,7 +42,7 @@ module.exports = WebpackConfig({
   plugins: [
     new HtmlWebpackPlugin({
       templateContent: templateContent("Editor", {
-        injectBody: ""
+        injectBody: '<div id="root"></div>'
       })
     }),
     extract,

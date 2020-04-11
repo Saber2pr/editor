@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-10 16:37:35
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-10 21:57:17
+ * @Last Modified time: 2020-04-11 15:46:50
  */
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import { createEditor, EditorAPI } from "./createEditor"
@@ -14,6 +14,7 @@ const __LS_CSS__ = "__EDITOR_CSS__"
 const __LS_HTML__ = "__EDITOR_HTML__"
 const __LS_EDITOR_WIDTH__ = "__EDITOR_EDITOR_WIDTH__"
 const __LS_EDITOR_THEME__ = "__EDITOR_EDITOR_THEME__"
+const __VERSION__ = "0.0.2"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
@@ -232,7 +233,7 @@ const App = () => {
               userSelect: "none"
             }}
           >
-            v0.0.1 by saber2pr&nbsp;
+            v{__VERSION__} by saber2pr&nbsp;
           </div>
         </div>
         <iframe ref={output_ref} />
@@ -243,4 +244,4 @@ const App = () => {
   )
 }
 
-render(<App />, document.body)
+render(<App />, document.querySelector("#root"))
