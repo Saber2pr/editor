@@ -2,19 +2,23 @@
  * @Author: saber2pr
  * @Date: 2020-04-10 16:37:35
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-11 15:46:50
+ * @Last Modified time: 2020-04-12 16:23:30
  */
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import { createEditor, EditorAPI } from "./createEditor"
 import "./app.css"
-
-// KEYS
-const __LS_JS__ = "__EDITOR_JS__"
-const __LS_CSS__ = "__EDITOR_CSS__"
-const __LS_HTML__ = "__EDITOR_HTML__"
-const __LS_EDITOR_WIDTH__ = "__EDITOR_EDITOR_WIDTH__"
-const __LS_EDITOR_THEME__ = "__EDITOR_EDITOR_THEME__"
-const __VERSION__ = "0.0.3"
+import {
+  __LS_JS__,
+  __LS_CSS__,
+  __LS_HTML__,
+  __LS_EDITOR_THEME__,
+  __LS_EDITOR_WIDTH__,
+  __VERSION__,
+  __LS_BG__,
+  __LS_BG_OP__
+} from "./constants"
+import { openModel } from "./components/model/model"
+import { Settings } from "./components/settings/settings"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
@@ -65,9 +69,20 @@ const App = () => {
     window["editor"] = editor.getInstance()
     editorHeight = editor.getSize().height
 
+    // init width, theme
     const _width = localStorage.getItem(__LS_EDITOR_WIDTH__)
     _theme && setTheme(_theme)
     _width && setEditorSize(Number(_width), editorHeight)
+
+    // init bg
+    const bgImage = localStorage.getItem(__LS_BG__)
+    if (bgImage) {
+      document.body.style.backgroundImage = `url(${bgImage})`
+    }
+    const bgOp = localStorage.getItem(__LS_BG_OP__)
+    if (bgOp) {
+      document.body.style.opacity = String(Number(bgOp) / 100)
+    }
   })
 
   const run = () => {
@@ -102,9 +117,9 @@ const App = () => {
     editor.setTheme(theme)
     localStorage.setItem(__LS_EDITOR_THEME__, theme)
     if (theme === "vs") {
-      document.body.style.background = "white"
+      document.body.style.backgroundColor = "white"
     } else {
-      document.body.style.background = "black"
+      document.body.style.backgroundColor = "black"
     }
   }
 
@@ -200,6 +215,12 @@ const App = () => {
               Black
             </option>
           </select>
+          <button
+            className="ButtonHigh"
+            onclick={() => openModel(({ close }) => <Settings close={close} />)}
+          >
+            Settings
+          </button>
           <button
             className="ButtonHigh"
             style={{ float: "right" }}

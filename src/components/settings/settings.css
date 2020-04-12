@@ -1,0 +1,16 @@
+.Settings ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.Settings {
+  padding: 1rem;
+  border: 1px solid #ababab;
+  z-index: 100;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #7d7d7d;
+}
