@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-10 16:37:35
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-12 16:23:30
+ * @Last Modified time: 2020-04-12 22:37:05
  */
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import { createEditor, EditorAPI } from "./createEditor"
@@ -19,6 +19,7 @@ import {
 } from "./constants"
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
+import { debounce, addDragListener, addUploadListener } from "./utils"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
@@ -26,31 +27,11 @@ const defaults = {
   html: localStorage.getItem(__LS_HTML__)
 }
 
-const debounce = (callback: Function, delta = 1000, id = "default") => {
-  clearTimeout(debounce[id])
-  debounce[id] = setTimeout(callback, delta)
-}
-
-const addDragListener = (
-  target: HTMLElement,
-  callback: (event: MouseEvent) => void,
-  onDragStart?: (event: MouseEvent) => void,
-  onDragEnd?: (event: MouseEvent) => void
-) => {
-  let lock = false
-  target.onmousedown = event => {
-    lock = true
-    onDragStart && onDragStart(event)
-  }
-  document.onmousemove = event => {
-    if (lock) {
-      callback(event)
-    }
-  }
-  target.onmouseup = event => {
-    lock = false
-    onDragEnd && onDragEnd(event)
-  }
+const FILES = {
+  current: "js",
+  javascript: "main.js",
+  css: "style.css",
+  html: "index.html"
 }
 
 const App = () => {
@@ -61,8 +42,6 @@ const App = () => {
   const sec_ref = useRef<"section">()
   const output_ref = useRef<"iframe">()
   const _theme = localStorage.getItem(__LS_EDITOR_THEME__) as any
-
-  let current = "js"
 
   useEffect(() => {
     editor = createEditor(ref.current, defaults)
@@ -83,6 +62,27 @@ const App = () => {
     if (bgOp) {
       document.body.style.opacity = String(Number(bgOp) / 100)
     }
+
+    // listeners
+    addUploadListener(({ name, type, content }) => {
+      if (type === "text/javascript") {
+        FILES.javascript = name
+        editor.changeModel("javascript")
+        editor.setValue("javascript", content)
+        activeBtn(3)
+      } else if (type === "text/html") {
+        FILES.html = name
+        editor.changeModel("html")
+        editor.setValue("html", content)
+        activeBtn(1)
+      } else if (type === "text/css") {
+        FILES.css = name
+        editor.changeModel("css")
+        editor.setValue("css", content)
+        activeBtn(2)
+      }
+      run()
+    })
   })
 
   const run = () => {
@@ -102,13 +102,18 @@ const App = () => {
   }
 
   const toolBar_ref = useRef<"nav">()
-  const activeBtn = target => {
-    for (const btn of Array.from(toolBar_ref.current.children)) {
+  const activeBtn = (target: EventTarget | number) => {
+    const children = Array.from(toolBar_ref.current.children)
+    for (const btn of children) {
       if (btn.tagName === "BUTTON") {
         btn.className = "ButtonHigh"
       }
     }
-    target.className = "ButtonHigh ButtonHigh-Active"
+    if (typeof target === "number") {
+      children[target]["className"] = "ButtonHigh ButtonHigh-Active"
+    } else {
+      target["className"] = "ButtonHigh ButtonHigh-Active"
+    }
   }
 
   const asideSize_ref = useRef<"div">()
@@ -136,16 +141,15 @@ const App = () => {
     const aLink = dl_ref.current
     let fileName: string
     let content: string
-    const tp = Date.now()
 
-    if (current === "js") {
-      fileName = `main_${tp}.js`
+    if (FILES.current === "js") {
+      fileName = FILES.javascript
       content = editor.getValue("javascript")
-    } else if (current === "css") {
-      fileName = `style_${tp}.css`
+    } else if (FILES.current === "css") {
+      fileName = FILES.css
       content = editor.getValue("css")
-    } else if (current === "html") {
-      fileName = `index_${tp}.html`
+    } else if (FILES.current === "html") {
+      fileName = FILES.html
       content = editor.getValue("html")
     }
 
@@ -170,7 +174,7 @@ const App = () => {
             onclick={e => {
               editor.changeModel("html")
               activeBtn(e.target)
-              current = "html"
+              FILES.current = "html"
             }}
           >
             HTML
@@ -180,7 +184,7 @@ const App = () => {
             onclick={e => {
               editor.changeModel("css")
               activeBtn(e.target)
-              current = "css"
+              FILES.current = "css"
             }}
           >
             CSS
@@ -190,7 +194,7 @@ const App = () => {
             onclick={e => {
               editor.changeModel("javascript")
               activeBtn(e.target)
-              current = "js"
+              FILES.current = "js"
             }}
           >
             JS
@@ -279,4 +283,4 @@ const App = () => {
   )
 }
 
-render(<App />, document.querySelector("#root"))
+render(<App />, document.getElementById("root"))
