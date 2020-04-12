@@ -70,16 +70,19 @@ const App = () => {
         editor.changeModel("javascript")
         editor.setValue("javascript", content)
         activeBtn(3)
+        FILES.current = "js"
       } else if (type === "text/html") {
         FILES.html = name
         editor.changeModel("html")
         editor.setValue("html", content)
         activeBtn(1)
+        FILES.current = "html"
       } else if (type === "text/css") {
         FILES.css = name
         editor.changeModel("css")
         editor.setValue("css", content)
         activeBtn(2)
+        FILES.current = "css"
       }
       run()
     })
