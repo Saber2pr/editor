@@ -14,7 +14,7 @@ const __LS_CSS__ = "__EDITOR_CSS__"
 const __LS_HTML__ = "__EDITOR_HTML__"
 const __LS_EDITOR_WIDTH__ = "__EDITOR_EDITOR_WIDTH__"
 const __LS_EDITOR_THEME__ = "__EDITOR_EDITOR_THEME__"
-const __VERSION__ = "0.0.2"
+const __VERSION__ = "0.0.3"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
@@ -89,7 +89,9 @@ const App = () => {
   const toolBar_ref = useRef<"nav">()
   const activeBtn = target => {
     for (const btn of Array.from(toolBar_ref.current.children)) {
-      btn.className = "ButtonHigh"
+      if (btn.tagName === "BUTTON") {
+        btn.className = "ButtonHigh"
+      }
     }
     target.className = "ButtonHigh ButtonHigh-Active"
   }
@@ -100,7 +102,7 @@ const App = () => {
     editor.setTheme(theme)
     localStorage.setItem(__LS_EDITOR_THEME__, theme)
     if (theme === "vs") {
-      document.body.style.background = "#ececec"
+      document.body.style.background = "white"
     } else {
       document.body.style.background = "black"
     }
@@ -142,6 +144,12 @@ const App = () => {
     <div className="App">
       <section ref={sec_ref} className="Main">
         <nav ref={toolBar_ref} className="ToolBar">
+          <div
+            style={{
+              borderBottom: "1px solid #ababab",
+              width: "0.5rem"
+            }}
+          />
           <button
             className="ButtonHigh"
             onclick={e => {
@@ -172,13 +180,12 @@ const App = () => {
           >
             JS
           </button>
-          <button
-            className="ButtonHigh"
-            style={{ float: "right" }}
-            onclick={download}
-          >
-            Download
-          </button>
+          <div
+            style={{
+              flexGrow: "1",
+              borderBottom: "1px solid #ababab"
+            }}
+          />
           <select
             className="ButtonHigh"
             oninput={e => setTheme(e.target["value"])}
@@ -193,6 +200,13 @@ const App = () => {
               Black
             </option>
           </select>
+          <button
+            className="ButtonHigh"
+            style={{ float: "right" }}
+            onclick={download}
+          >
+            Download
+          </button>
         </nav>
         <main className="Editor" ref={ref} onkeydown={() => debounce(run)} />
       </section>
@@ -226,14 +240,14 @@ const App = () => {
           </button>
           <div
             style={{
-              float: "right",
               lineHeight: "1.5rem",
-              color: "#80808085",
+              color: "#d5d5d7",
               wordBreak: "break-all",
-              userSelect: "none"
+              userSelect: "none",
+              padding: "0 0.5rem"
             }}
           >
-            v{__VERSION__} by saber2pr&nbsp;
+            v{__VERSION__} by saber2pr
           </div>
         </div>
         <iframe ref={output_ref} />
