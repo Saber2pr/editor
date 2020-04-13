@@ -107,9 +107,9 @@ const App = () => {
     const html = editor.getValue("html")
     const css = editor.getValue("css")
 
-    js && localStorage.setItem(__LS_JS__, js)
-    html && localStorage.setItem(__LS_HTML__, html)
-    css && localStorage.setItem(__LS_CSS__, css)
+    localStorage.setItem(__LS_JS__, js)
+    localStorage.setItem(__LS_HTML__, html)
+    localStorage.setItem(__LS_CSS__, css)
 
     output_ref.current.srcdoc = `<style>${editor.getValue(
       "css"
