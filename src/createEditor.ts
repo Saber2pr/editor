@@ -54,6 +54,20 @@ export function createEditor(
       }
     }
   }
+  function getState(type: string) {
+    if (type in data) {
+      return data[type].state
+    } else {
+      throw new Error(`type ${type} is not found in data.`)
+    }
+  }
+  function setState(type: string, state) {
+    if (type in data) {
+      data[type].state = state
+    } else {
+      throw new Error(`type ${type} is not found in data.`)
+    }
+  }
   function getData() {
     return data
   }
@@ -66,6 +80,9 @@ export function createEditor(
   function getSize() {
     const { width, height } = editor.getLayoutInfo()
     return { width, height }
+  }
+  function getModel() {
+    return editor.getModel()
   }
   function changeModel(type: string) {
     if (type in data) {
@@ -96,7 +113,10 @@ export function createEditor(
     getData,
     setTheme,
     setSize,
-    getSize
+    getSize,
+    getModel,
+    getState,
+    setState
   }
 }
 
@@ -127,12 +147,10 @@ export const createDiffEditor = (
   return {
     instance: diffEditor,
     setSize,
-    getSize
+    getSize,
+    originalModel,
+    modifiedModel
   }
 }
 
 export type DiffEditorAPI = ReturnType<typeof createDiffEditor>
-
-export function createModel(value: string, type: string) {
-  return monaco.editor.createModel(value, type)
-}

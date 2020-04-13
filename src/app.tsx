@@ -9,8 +9,7 @@ import {
   createEditor,
   EditorAPI,
   DiffEditorAPI,
-  createDiffEditor,
-  createModel
+  createDiffEditor
 } from "./createEditor"
 import "./app.css"
 import {
@@ -194,18 +193,28 @@ const App = () => {
       diff_ref.current.style.display = "none"
       diff_flag = false
       changeAllBtnsDisabled(false)
+
+      // restore state when load.
+      const state = editor.getState(FILES.current)
+      const instance = editor.getInstance()
+      instance.restoreViewState(state)
+      instance.focus()
     } else {
       ref.current.style.display = "none"
       diff_ref.current.style.display = "block"
       diff_flag = true
+      changeAllBtnsDisabled(true)
+
+      // save state before unload
+      const instance = editor.getInstance()
+      const state = instance.saveViewState()
+      editor.setState(FILES.current, state)
+
       const value = editor.getValue()
       if (diffEditor) {
-        diffEditor.instance.setModel({
-          original: createModel(value, FILES.current),
-          modified: createModel(value, FILES.current)
-        })
+        diffEditor.modifiedModel.setValue(value)
+        diffEditor.originalModel.setValue(value)
       }
-      changeAllBtnsDisabled(true)
     }
   }
 
