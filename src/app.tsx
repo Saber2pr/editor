@@ -303,11 +303,11 @@ const App = () => {
             Download
           </button>
         </nav>
-        <main className="Editor" ref={ref} onkeydown={() => debounce(run)} />
+        <main className="Editor" ref={ref} onkeyup={() => debounce(run)} />
         <div
           className="DiffEditor"
           ref={diff_ref}
-          onkeydown={() => debounce(saveModified)}
+          onkeyup={() => debounce(saveModified)}
         />
       </section>
       <aside ref={aside_ref} className="Aside">
