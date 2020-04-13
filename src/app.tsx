@@ -5,7 +5,13 @@
  * @Last Modified time: 2020-04-12 22:37:05
  */
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
-import { createEditor, EditorAPI } from "./createEditor"
+import {
+  createEditor,
+  EditorAPI,
+  DiffEditorAPI,
+  createDiffEditor,
+  createModel
+} from "./createEditor"
 import "./app.css"
 import {
   __LS_JS__,
@@ -28,7 +34,7 @@ const defaults = {
 }
 
 const FILES = {
-  current: "js",
+  current: "javascript",
   javascript: "main.js",
   css: "style.css",
   html: "index.html"
@@ -39,14 +45,23 @@ const App = () => {
   const docWidth = document.documentElement.clientWidth
   let editorHeight = document.documentElement.clientHeight - 27
   const ref = useRef<"main">()
+  const diff_ref = useRef<"div">()
   const sec_ref = useRef<"section">()
   const output_ref = useRef<"iframe">()
   const _theme = localStorage.getItem(__LS_EDITOR_THEME__) as any
+
+  const toolBar_ref = useRef<"nav">()
+  let toolBtns: HTMLButtonElement[]
 
   useEffect(() => {
     editor = createEditor(ref.current, defaults)
     window["editor"] = editor.getInstance()
     editorHeight = editor.getSize().height
+
+    diffEditor = createDiffEditor(diff_ref.current, "", "")
+    window["diffEditor"] = diffEditor.instance
+
+    toolBtns = Array.from(toolBar_ref.current.children) as any
 
     // init width, theme
     const _width = localStorage.getItem(__LS_EDITOR_WIDTH__)
@@ -70,7 +85,7 @@ const App = () => {
         editor.changeModel("javascript")
         editor.setValue("javascript", content)
         activeBtn(3)
-        FILES.current = "js"
+        FILES.current = "javascript"
       } else if (type === "text/html") {
         FILES.html = name
         editor.changeModel("html")
@@ -104,21 +119,25 @@ const App = () => {
     )}</script>`
   }
 
-  const toolBar_ref = useRef<"nav">()
   const activeBtn = (target: EventTarget | number) => {
-    const children = Array.from(toolBar_ref.current.children)
-    for (const btn of children) {
+    for (const btn of toolBtns) {
       if (btn.tagName === "BUTTON") {
         btn.className = "ButtonHigh"
       }
     }
     if (typeof target === "number") {
-      children[target]["className"] = "ButtonHigh ButtonHigh-Active"
+      toolBtns[target]["className"] = "ButtonHigh ButtonHigh-Active"
     } else {
       target["className"] = "ButtonHigh ButtonHigh-Active"
     }
   }
+  const changeAllBtnsDisabled = (enable = true) => {
+    toolBtns[1]["disabled"] = enable
+    toolBtns[2]["disabled"] = enable
+    toolBtns[3]["disabled"] = enable
+  }
 
+  const aside_ref = useRef<"aside">()
   const asideSize_ref = useRef<"div">()
 
   const setTheme = (theme: "vs" | "vs-dark" | "hc-black") => {
@@ -133,8 +152,11 @@ const App = () => {
 
   const setEditorSize = (width: number, height: number) => {
     sec_ref.current.style.width = width + "px"
+    const asideWidth = docWidth - width
+    aside_ref.current.style.width = asideWidth + "px"
     editor.setSize(width, height)
-    asideSize_ref.current.textContent = `${docWidth - width} x ${height}`
+    diffEditor.setSize(width, height)
+    asideSize_ref.current.textContent = `${asideWidth} x ${height}`
     localStorage.setItem(__LS_EDITOR_WIDTH__, String(width))
   }
 
@@ -145,7 +167,7 @@ const App = () => {
     let fileName: string
     let content: string
 
-    if (FILES.current === "js") {
+    if (FILES.current === "javascript") {
       fileName = FILES.javascript
       content = editor.getValue("javascript")
     } else if (FILES.current === "css") {
@@ -160,6 +182,39 @@ const App = () => {
     aLink.download = fileName
     aLink.href = URL.createObjectURL(blob)
     aLink.click()
+  }
+
+  // diff
+  let diff_flag = false
+  let diffEditor: DiffEditorAPI = null
+
+  const switchDiff = () => {
+    if (diff_flag) {
+      ref.current.style.display = "block"
+      diff_ref.current.style.display = "none"
+      diff_flag = false
+      changeAllBtnsDisabled(false)
+    } else {
+      ref.current.style.display = "none"
+      diff_ref.current.style.display = "block"
+      diff_flag = true
+      const value = editor.getValue()
+      if (diffEditor) {
+        diffEditor.instance.setModel({
+          original: createModel(value, FILES.current),
+          modified: createModel(value, FILES.current)
+        })
+      }
+      changeAllBtnsDisabled(true)
+    }
+  }
+
+  const saveModified = () => {
+    if (diffEditor) {
+      const value = diffEditor.instance.getModifiedEditor().getValue()
+      editor.setValue(value)
+      run()
+    }
   }
 
   return (
@@ -197,7 +252,7 @@ const App = () => {
             onclick={e => {
               editor.changeModel("javascript")
               activeBtn(e.target)
-              FILES.current = "js"
+              FILES.current = "javascript"
             }}
           >
             JS
@@ -208,6 +263,9 @@ const App = () => {
               borderBottom: "1px solid #ababab"
             }}
           />
+          <button className="ButtonHigh" onclick={switchDiff}>
+            Diff
+          </button>
           <select
             className="ButtonHigh"
             oninput={e => setTheme(e.target["value"])}
@@ -237,8 +295,13 @@ const App = () => {
           </button>
         </nav>
         <main className="Editor" ref={ref} onkeydown={() => debounce(run)} />
+        <div
+          className="DiffEditor"
+          ref={diff_ref}
+          onkeydown={() => debounce(saveModified)}
+        />
       </section>
-      <aside className="Aside">
+      <aside ref={aside_ref} className="Aside">
         <div
           className="Aside-Btn"
           ref={el =>

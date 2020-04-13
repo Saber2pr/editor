@@ -13,4 +13,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: #7d7d7d;
+  background-color: inherit;
+  box-shadow: #8e8e8e75 0 13px 7px -9px;
 }

@@ -18,6 +18,10 @@
   outline: none;
 }
 
+.ButtonHigh:disabled {
+  cursor: not-allowed;
+}
+
 .ButtonHigh-Active {
   color: #61dafb;
   border: none;
@@ -115,4 +119,9 @@ body {
 
 .Editor {
   flex-grow: 1;
+}
+
+.DiffEditor {
+  flex-grow: 1;
+  display: none;
 }

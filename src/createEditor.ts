@@ -27,21 +27,31 @@ export function createEditor(
   const editor = monaco.editor.create(editorContainer, {
     model: data[defaultLang].model
   })
-  function setValue(type: string, value: string) {
-    if (type in data) {
-      data[type].model.setValue(value)
+  function setValue(value: string): void
+  function setValue(type: string, value: string): void
+  function setValue(type: string, value?: string) {
+    if (value === undefined) {
+      editor.setValue(type)
     } else {
-      throw new Error(`type ${type} is not found in data.`)
+      if (type in data) {
+        data[type].model.setValue(value)
+      } else {
+        throw new Error(`type ${type} is not found in data.`)
+      }
     }
   }
   function getCurrentValue() {
     return editor.getValue()
   }
-  function getValue(type: string) {
-    if (type in data) {
-      return data[type].model.getValue()
+  function getValue(type?: string) {
+    if (type === undefined) {
+      return editor.getValue()
     } else {
-      throw new Error(`type ${type} is not found in data.`)
+      if (type in data) {
+        return data[type].model.getValue()
+      } else {
+        throw new Error(`type ${type} is not found in data.`)
+      }
     }
   }
   function getData() {
@@ -91,3 +101,38 @@ export function createEditor(
 }
 
 export type EditorAPI = ReturnType<typeof createEditor>
+
+export const createDiffEditor = (
+  container: HTMLElement,
+  original: string,
+  modified: string
+) => {
+  const originalModel = monaco.editor.createModel(original, "text/plain")
+  const modifiedModel = monaco.editor.createModel(modified, "text/plain")
+
+  const diffEditor = monaco.editor.createDiffEditor(container)
+  diffEditor.setModel({
+    original: originalModel,
+    modified: modifiedModel
+  })
+
+  function setSize(width: number, height: number) {
+    diffEditor.layout({ width, height })
+  }
+  function getSize() {
+    const { width, height } = diffEditor.getLayoutInfo()
+    return { width, height }
+  }
+
+  return {
+    instance: diffEditor,
+    setSize,
+    getSize
+  }
+}
+
+export type DiffEditorAPI = ReturnType<typeof createDiffEditor>
+
+export function createModel(value: string, type: string) {
+  return monaco.editor.createModel(value, type)
+}

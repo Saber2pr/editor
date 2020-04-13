@@ -5,12 +5,14 @@
  * @Last Modified time: 2020-04-12 15:51:53
  */
 import { render } from "@saber2pr/tsx"
+import "./model.css"
 
 type ModelAPI = { close: Function }
 
 export const openModel = (message: (api: ModelAPI) => JSX.Element) => {
   const container = document.createElement("div")
   document.body.append(container)
+  container.className = "Model"
 
   const close = () => {
     document.body.removeChild(container)
