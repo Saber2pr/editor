@@ -81,8 +81,16 @@ export function createEditor(
     const { width, height } = editor.getLayoutInfo()
     return { width, height }
   }
-  function getModel() {
-    return editor.getModel()
+  function getModel(type?: string) {
+    if (type === undefined) {
+      return editor.getModel()
+    } else {
+      if (type in data) {
+        return data[type].model
+      } else {
+        throw new Error(`type ${type} is not found in data.`)
+      }
+    }
   }
   function changeModel(type: string) {
     if (type in data) {
@@ -154,3 +162,11 @@ export const createDiffEditor = (
 }
 
 export type DiffEditorAPI = ReturnType<typeof createDiffEditor>
+
+export const compileTS = async uri => {
+  const tsWorker = await monaco.languages.typescript.getTypeScriptWorker()
+  const client = await tsWorker(uri)
+  const result = await client.getEmitOutput(uri.toString())
+  const files = result.outputFiles[0]
+  return files.text
+}

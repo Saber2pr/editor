@@ -9,7 +9,8 @@ import {
   createEditor,
   EditorAPI,
   DiffEditorAPI,
-  createDiffEditor
+  createDiffEditor,
+  compileTS
 } from "./createEditor"
 import "./app.css"
 import {
@@ -26,7 +27,6 @@ import {
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
-import { transpileModule, checkTSSupport } from "./ts_compiler"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
@@ -63,6 +63,8 @@ const App = () => {
 
     diffEditor = createDiffEditor(diff_ref.current, "", "")
     window["diffEditor"] = diffEditor.instance
+    const { width, height } = editor.getSize()
+    diffEditor.setSize(width, height)
 
     toolBtns = Array.from(toolBar_ref.current.children) as any
 
@@ -124,9 +126,8 @@ const App = () => {
     localStorage.setItem(__LS_TS__, typescript)
 
     if (!!typescript) {
-      checkTSSupport()
       output_ref.current.srcdoc = "[TS]: Compiling..."
-      transpileModule(typescript).then(ts_js => {
+      compileTS(editor.getModel("typescript").uri).then(ts_js => {
         output_ref.current.srcdoc = `<style>${css}</style>${html}<script>${js}</script><script>${ts_js}</script>`
       })
     } else {
