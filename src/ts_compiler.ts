@@ -15,7 +15,7 @@ export const checkTSSupport = () => {
 export const transpileModule = (
   input,
   options = {
-    module: ts.ModuleKind.AMD,
+    module: ts.ModuleKind.None,
     target: ts.ScriptTarget.ES5,
     noLib: true,
     noResolve: true,
