@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-10 16:37:35
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-12 22:37:05
+ * @Last Modified time: 2020-04-14 16:19:43
  */
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import {
@@ -14,6 +14,7 @@ import {
 import "./app.css"
 import {
   __LS_JS__,
+  __LS_TS__,
   __LS_CSS__,
   __LS_HTML__,
   __LS_EDITOR_THEME__,
@@ -25,9 +26,11 @@ import {
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
+import { transpileModule, checkTSSupport } from "./ts_compiler"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
+  typescript: localStorage.getItem(__LS_TS__) || `// input code here...\n`,
   css: localStorage.getItem(__LS_CSS__),
   html: localStorage.getItem(__LS_HTML__)
 }
@@ -35,6 +38,7 @@ const defaults = {
 const FILES = {
   current: "javascript",
   javascript: "main.js",
+  typescript: "main.ts",
   css: "style.css",
   html: "index.html"
 }
@@ -79,13 +83,7 @@ const App = () => {
 
     // listeners
     addUploadListener(({ name, type, content }) => {
-      if (type === "text/javascript") {
-        FILES.javascript = name
-        editor.changeModel("javascript")
-        editor.setValue("javascript", content)
-        activeBtn(3)
-        FILES.current = "javascript"
-      } else if (type === "text/html") {
+      if (type === "text/html") {
         FILES.html = name
         editor.changeModel("html")
         editor.setValue("html", content)
@@ -97,6 +95,18 @@ const App = () => {
         editor.setValue("css", content)
         activeBtn(2)
         FILES.current = "css"
+      } else if (type === "text/javascript") {
+        FILES.javascript = name
+        editor.changeModel("javascript")
+        editor.setValue("javascript", content)
+        activeBtn(3)
+        FILES.current = "javascript"
+      } else if (name.endsWith(".ts")) {
+        FILES.typescript = name
+        editor.changeModel("typescript")
+        editor.setValue("typescript", content)
+        activeBtn(4)
+        FILES.current = "typescript"
       }
       run()
     })
@@ -106,16 +116,22 @@ const App = () => {
     const js = editor.getValue("javascript")
     const html = editor.getValue("html")
     const css = editor.getValue("css")
+    const typescript = editor.getValue("typescript")
 
     localStorage.setItem(__LS_JS__, js)
     localStorage.setItem(__LS_HTML__, html)
     localStorage.setItem(__LS_CSS__, css)
+    localStorage.setItem(__LS_TS__, typescript)
 
-    output_ref.current.srcdoc = `<style>${editor.getValue(
-      "css"
-    )}</style>${editor.getValue("html")}<script>${editor.getValue(
-      "javascript"
-    )}</script>`
+    if (!!typescript) {
+      checkTSSupport()
+      output_ref.current.srcdoc = "[TS]: Compiling..."
+      transpileModule(typescript).then(ts_js => {
+        output_ref.current.srcdoc = `<style>${css}</style>${html}<script>${js}</script><script>${ts_js}</script>`
+      })
+    } else {
+      output_ref.current.srcdoc = `<style>${css}</style>${html}<script>${js}</script>`
+    }
   }
 
   const activeBtn = (target: EventTarget | number) => {
@@ -130,10 +146,11 @@ const App = () => {
       target["className"] = "ButtonHigh ButtonHigh-Active"
     }
   }
-  const changeAllBtnsDisabled = (enable = true) => {
-    toolBtns[1]["disabled"] = enable
-    toolBtns[2]["disabled"] = enable
-    toolBtns[3]["disabled"] = enable
+  const changeAllBtnsDisabled = (disabled = true) => {
+    toolBtns[1]["disabled"] = disabled
+    toolBtns[2]["disabled"] = disabled
+    toolBtns[3]["disabled"] = disabled
+    toolBtns[4]["disabled"] = disabled
   }
 
   const aside_ref = useRef<"aside">()
@@ -175,6 +192,9 @@ const App = () => {
     } else if (FILES.current === "html") {
       fileName = FILES.html
       content = editor.getValue("html")
+    } else if (FILES.current === "typescript") {
+      fileName = FILES.typescript
+      content = editor.getValue("typescript")
     }
 
     const blob = new Blob([content])
@@ -265,6 +285,16 @@ const App = () => {
             }}
           >
             JS
+          </button>
+          <button
+            className="ButtonHigh"
+            onclick={e => {
+              editor.changeModel("typescript")
+              activeBtn(e.target)
+              FILES.current = "typescript"
+            }}
+          >
+            TS
           </button>
           <div
             style={{
