@@ -5,12 +5,13 @@
  * @Last Modified time: 2020-04-12 16:37:43
  */
 import TSX, { useRef } from "@saber2pr/tsx"
-import { __LS_BG__, __LS_BG_OP__ } from "../../constants"
+import { __LS_BG__, __LS_BG_OP__, __LS_ARG__ } from "../../constants"
 import "./settings.css"
 
 export const Settings = ({ close }: { close: Function }) => {
   const bg_ref = useRef<"input">()
   const bg_op_ref = useRef<"input">()
+  const arg_ref = useRef<"textarea">()
   const save = () => {
     const bgImage = bg_ref.current.value
     localStorage.setItem(__LS_BG__, bgImage)
@@ -19,6 +20,9 @@ export const Settings = ({ close }: { close: Function }) => {
     const bgOp = bg_op_ref.current.value
     localStorage.setItem(__LS_BG_OP__, bgOp)
     document.body.style.opacity = String(Number(bgOp) / 100)
+
+    const arg = arg_ref.current.value
+    localStorage.setItem(__LS_ARG__, arg)
 
     close()
   }
@@ -51,6 +55,16 @@ export const Settings = ({ close }: { close: Function }) => {
                   const bgOp = bg_op_ref.current.value
                   document.body.style.opacity = String(Number(bgOp) / 100)
                 }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <th title="execute when editor running">script</th>
+            <td>
+              <textarea
+                defaultValue={localStorage.getItem(__LS_ARG__) || ""}
+                ref={arg_ref}
+                placeholder="input scripts..."
               />
             </td>
           </tr>

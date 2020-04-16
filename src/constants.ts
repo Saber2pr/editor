@@ -5,6 +5,7 @@
  * @Last Modified time: 2020-04-14 16:20:09
  */
 // KEYS
+export const __LS_ARG__ = "__EDITOR_ARG__"
 export const __LS_JS__ = "__EDITOR_JS__"
 export const __LS_TS__ = "__EDITOR_TS__"
 export const __LS_CSS__ = "__EDITOR_CSS__"

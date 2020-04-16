@@ -22,7 +22,8 @@ import {
   __LS_EDITOR_WIDTH__,
   __VERSION__,
   __LS_BG__,
-  __LS_BG_OP__
+  __LS_BG_OP__,
+	__LS_ARG__
 } from "./constants"
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
@@ -30,7 +31,7 @@ import { debounce, addDragListener, addUploadListener } from "./utils"
 
 const defaults = {
   javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
-  typescript: localStorage.getItem(__LS_TS__) || `// input code here...\n`,
+  typescript: localStorage.getItem(__LS_TS__),
   css: localStorage.getItem(__LS_CSS__),
   html: localStorage.getItem(__LS_HTML__)
 }
@@ -111,7 +112,11 @@ const App = () => {
         FILES.current = "typescript"
       }
       run()
-    })
+		})
+		
+		// execute scripts
+		const scripts = localStorage.getItem(__LS_ARG__)
+		eval(scripts)
   })
 
   const run = () => {
