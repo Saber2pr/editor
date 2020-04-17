@@ -147,15 +147,10 @@ export const createDiffEditor = (
   function setSize(width: number, height: number) {
     diffEditor.layout({ width, height })
   }
-  function getSize() {
-    const { width, height } = diffEditor.getLayoutInfo()
-    return { width, height }
-  }
 
   return {
     instance: diffEditor,
     setSize,
-    getSize,
     originalModel,
     modifiedModel
   }

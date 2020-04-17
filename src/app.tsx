@@ -23,7 +23,7 @@ import {
   __VERSION__,
   __LS_BG__,
   __LS_BG_OP__,
-	__LS_ARG__
+  __LS_ARG__
 } from "./constants"
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
@@ -44,9 +44,23 @@ const FILES = {
   html: "index.html"
 }
 
+const hook_console = `<script>
+;(() => {
+	// hook
+	var origin_log = console.log
+	console.log = function() {
+		origin_log.apply(this, arguments)
+		var output = Array.from(arguments).join(" ")
+		top.postMessage({method: "console", value: output}, top.location.origin)
+	}
+	window.addEventListener('error', event => {
+		top.postMessage({method: "console-error", value: event.message}, top.location.origin)
+	})
+})()</script>`
+
 const App = () => {
   let editor: EditorAPI
-  const docWidth = document.documentElement.clientWidth
+  let docWidth = document.documentElement.clientWidth
   let editorHeight = document.documentElement.clientHeight - 27
   const ref = useRef<"main">()
   const diff_ref = useRef<"div">()
@@ -56,6 +70,10 @@ const App = () => {
 
   const toolBar_ref = useRef<"nav">()
   let toolBtns: HTMLButtonElement[]
+
+  // refs
+  const console_ref = useRef<"div">()
+  const aside_console_ref = useRef<"div">()
 
   useEffect(() => {
     editor = createEditor(ref.current, defaults)
@@ -112,11 +130,11 @@ const App = () => {
         FILES.current = "typescript"
       }
       run()
-		})
-		
-		// execute scripts
-		const scripts = localStorage.getItem(__LS_ARG__)
-		eval(scripts)
+    })
+
+    // execute scripts
+    const scripts = localStorage.getItem(__LS_ARG__)
+    eval(scripts)
   })
 
   const run = () => {
@@ -130,15 +148,42 @@ const App = () => {
     localStorage.setItem(__LS_CSS__, css)
     localStorage.setItem(__LS_TS__, typescript)
 
+    const hook = hook_console
+
     if (!!typescript) {
       output_ref.current.srcdoc = "[TS]: Compiling..."
       compileTS(editor.getModel("typescript").uri).then(ts_js => {
-        output_ref.current.srcdoc = `<style>${css}</style>${html}<script>${js}</script><script>${ts_js}</script>`
+        output_ref.current.srcdoc =
+          hook +
+          `<style>${css}</style>${html}<script>${js}</script><script>${ts_js}</script>`
       })
     } else {
-      output_ref.current.srcdoc = `<style>${css}</style>${html}<script>${js}</script>`
+      output_ref.current.srcdoc =
+        hook + `<style>${css}</style>${html}<script>${js}</script>`
     }
   }
+
+  // console receive
+  let consoleContent = ""
+  const clearConsole = () => {
+    consoleContent = ""
+    console_ref.current.innerHTML = consoleContent
+  }
+  const console_style = `line-height:1.5rem;border-bottom: 1px solid #e8e8e8;`
+  window.addEventListener("message", event => {
+    const data = event.data
+    if (data.method === "console") {
+      consoleContent += `<pre style="${console_style}">${data.value}</pre>`
+      console_ref.current.innerHTML = consoleContent
+    }
+
+    if (data.method === "console-error") {
+      consoleContent += `<pre style="${console_style}color: red;">${
+        data.value
+      }</pre>`
+      console_ref.current.innerHTML = consoleContent
+    }
+  })
 
   const activeBtn = (target: EventTarget | number) => {
     for (const btn of toolBtns) {
@@ -252,6 +297,25 @@ const App = () => {
     }
   }
 
+  // console btn
+  let console_flag = false
+  const switchConsole = event => {
+    if (console_flag) {
+      aside_console_ref.current.style.transform = "translate(0, 0)"
+      console_flag = false
+      event.target.innerHTML = "[hide]"
+    } else {
+      aside_console_ref.current.style.transform = "translate(0, 90%)"
+      console_flag = true
+      event.target.innerHTML = "[show]"
+    }
+  }
+
+  // fixed docWidth
+  window.addEventListener("resize", () => {
+    docWidth = document.documentElement.clientWidth
+  })
+
   return (
     <div className="App">
       <section ref={sec_ref} className="Main">
@@ -357,10 +421,12 @@ const App = () => {
               },
               () => {
                 output_ref.current.style.display = "none"
+                aside_console_ref.current.style.display = "none"
                 asideSize_ref.current.style.display = "block"
               },
               () => {
                 output_ref.current.style.display = "block"
+                aside_console_ref.current.style.display = "block"
                 asideSize_ref.current.style.display = "none"
                 localStorage.setItem(
                   __LS_EDITOR_WIDTH__,
@@ -387,6 +453,18 @@ const App = () => {
           </div>
         </div>
         <iframe ref={output_ref} />
+        <div ref={aside_console_ref} className="Aside-Console">
+          <div className="Console-Bar">
+            <div style={{ flexGrow: "1" }}>Console</div>
+            <div className="Console-Bar-Btn" onclick={clearConsole}>
+              [clear]
+            </div>
+            <div className="Console-Bar-Btn" onclick={switchConsole}>
+              [hide]
+            </div>
+          </div>
+          <div ref={console_ref} className="Console-Output" />
+        </div>
         <div className="Aside-Size" ref={asideSize_ref} />
       </aside>
       <a ref={dl_ref} />

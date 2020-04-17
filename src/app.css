@@ -102,6 +102,7 @@ body {
 
 .Aside-Run {
   border-bottom: 1px solid #ececec;
+  height: 1.5rem;
   height: calc(1.5rem + 1px);
   display: flex;
   justify-content: space-between;
@@ -111,6 +112,8 @@ body {
 .Aside iframe {
   background: white;
   border-left: 1px solid #80808085;
+  height: 95%;
+  height: calc(100% - 3rem + 1px);
 }
 
 .ToolBar {
@@ -124,4 +127,36 @@ body {
 .DiffEditor {
   flex-grow: 1;
   display: none;
+}
+
+.Aside-Console {
+  width: 100%;
+  width: calc(100% - 1px);
+  height: 15rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-top: 1px solid #a9a9a9;
+  transition: transform 0.2s ease-in-out;
+  background: white;
+}
+
+.Console-Bar {
+  height: 1.5rem;
+  border-bottom: 1px solid #a9a9a9;
+  background: #f1f1f1;
+  padding: 0 0.5rem;
+  color: dimgrey;
+  display: flex;
+}
+
+.Console-Bar-Btn {
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.Console-Output {
+  height: 13.5rem;
+  overflow: auto;
+  padding: 0 0.5rem;
 }
