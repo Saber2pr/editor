@@ -42,7 +42,10 @@ module.exports = WebpackConfig({
   plugins: [
     new HtmlWebpackPlugin({
       templateContent: templateContent("Editor", {
-        injectBody: '<div id="root"></div>'
+        injectHead:
+          '<script src="https://saber2pr.top/loading/index.min.js"></script>',
+        injectBody:
+          '<div id="root"></div></div><script>LOADING.init();</script>'
       })
     }),
     extract,

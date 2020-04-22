@@ -1,16 +1,19 @@
 /*
  * @Author: saber2pr
- * @Date: 2020-04-10 16:37:35
- * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-14 16:19:43
+ * @Date: 2020-04-22 22:36:26
+ * @Last Modified by:   saber2pr
+ * @Last Modified time: 2020-04-22 22:36:26
  */
+declare const LOADING: { init(): void; destroy(): void }
+
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import {
   createEditor,
   EditorAPI,
   DiffEditorAPI,
   createDiffEditor,
-  compileTS
+  compileTS,
+  addModuleDeclaration
 } from "./createEditor"
 import "./app.css"
 import {
@@ -39,7 +42,7 @@ const defaults = {
 const FILES = {
   current: "javascript",
   javascript: "main.js",
-  typescript: "main.ts",
+  typescript: "main.tsx",
   css: "style.css",
   html: "index.html"
 }
@@ -57,6 +60,15 @@ const hook_console = `<script>
 		top.postMessage({method: "console-error", value: event.message}, top.location.origin)
 	})
 })()</script>`
+
+const addReactSupport = async () => {
+  await addModuleDeclaration("/libs/react/index.d.ts", "react")
+  await addModuleDeclaration("/libs/react-dom/index.d.ts", "react-dom")
+  await addModuleDeclaration("/libs/csstype/index.d.ts", "csstype")
+  await addModuleDeclaration("/libs/prop-types/index.d.ts", "prop-types")
+}
+const AMDSupport = `<script src="/libs/requirejs/require.min.js"></script>
+<script src="/libs/requirejs/config.js"></script>`
 
 const App = () => {
   let editor: EditorAPI
@@ -122,7 +134,7 @@ const App = () => {
         editor.setValue("javascript", content)
         activeBtn(3)
         FILES.current = "javascript"
-      } else if (name.endsWith(".ts")) {
+      } else if (name.endsWith(".tsx")) {
         FILES.typescript = name
         editor.changeModel("typescript")
         editor.setValue("typescript", content)
@@ -135,9 +147,14 @@ const App = () => {
     // execute scripts
     const scripts = localStorage.getItem(__LS_ARG__)
     eval(scripts)
+
+    // init finish
+    addReactSupport().finally(() => {
+      LOADING.destroy()
+    })
   })
 
-  const run = () => {
+  const run = async () => {
     const js = editor.getValue("javascript")
     const html = editor.getValue("html")
     const css = editor.getValue("css")
@@ -152,11 +169,12 @@ const App = () => {
 
     if (!!typescript) {
       output_ref.current.srcdoc = "[TS]: Compiling..."
-      compileTS(editor.getModel("typescript").uri).then(ts_js => {
-        output_ref.current.srcdoc =
-          hook +
-          `<style>${css}</style>${html}<script>${js}</script><script>${ts_js}</script>`
-      })
+      let ts_js = await compileTS(editor.getModel("typescript").uri)
+      ts_js = ts_js.replace(/define\(/, 'define("index",')
+      output_ref.current.srcdoc =
+        hook +
+        AMDSupport +
+        `<style>${css}</style>${html}<script>${js}</script><script>${ts_js};require(["index"])</script>`
     } else {
       output_ref.current.srcdoc =
         hook + `<style>${css}</style>${html}<script>${js}</script>`

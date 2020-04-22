@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-10 15:05:30
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-10 19:04:09
+ * @Last Modified time: 2020-04-22 22:24:02
  */
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main.js"
 
@@ -19,7 +19,10 @@ export function createEditor(
       type,
       {
         state: null as monaco.editor.ICodeEditorViewState,
-        model: monaco.editor.createModel(value, type)
+        model:
+          type === "typescript"
+            ? createTSXModel(value)
+            : monaco.editor.createModel(value, type)
       }
     ])
   )
@@ -165,3 +168,32 @@ export const compileTS = async uri => {
   const files = result.outputFiles[0]
   return files.text
 }
+
+export const createTSXModel = (content: string) => {
+  const CompilerOptions = monaco.languages.typescript.typescriptDefaults.getCompilerOptions()
+  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+    ...CompilerOptions,
+    jsx: monaco.languages.typescript.JsxEmit["React"],
+    target: monaco.languages.typescript.ScriptTarget["ES5"],
+    module: monaco.languages.typescript.ModuleKind["AMD"],
+    allowSyntheticDefaultImports: true,
+    esModuleInterop: true,
+    allowJs: true
+  })
+  return monaco.editor.createModel(
+    content,
+    "typescript",
+    monaco.Uri.file("input.tsx")
+  )
+}
+
+export const addModuleDeclaration = async (url: string, moduleName: string) => {
+  const text = await fetch(url).then(res => res.text())
+  const wrapped = `declare module "${moduleName}" { ${text} }`
+  monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    wrapped,
+    moduleName
+  )
+}
+// export api.
+window["addModuleDeclaration"] = addModuleDeclaration

@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-12 21:03:23
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-12 22:37:09
+ * @Last Modified time: 2020-04-22 20:07:06
  */
 export const debounce = (callback: Function, delta = 1000, id = "default") => {
   clearTimeout(debounce[id])
