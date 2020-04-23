@@ -1,8 +1,8 @@
 /*
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
- * @Last Modified by:   saber2pr
- * @Last Modified time: 2020-04-22 22:36:26
+ * @Last Modified by: saber2pr
+ * @Last Modified time: 2020-04-23 13:14:10
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -29,7 +29,7 @@ import {
   __LS_ARG__
 } from "./constants"
 import { openModel } from "./components/model/model"
-import { Settings } from "./components/settings/settings"
+import { Settings, ModuleManager } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 
 const defaults = {
@@ -165,20 +165,21 @@ const App = () => {
     localStorage.setItem(__LS_CSS__, css)
     localStorage.setItem(__LS_TS__, typescript)
 
-    const hook = hook_console
+    let code =
+      hook_console + `<style>${css}</style>${html}<script>${js}</script>`
 
     if (!!typescript) {
       output_ref.current.srcdoc = "[TS]: Compiling..."
       let ts_js = await compileTS(editor.getModel("typescript").uri)
-      ts_js = ts_js.replace(/define\(/, 'define("index",')
-      output_ref.current.srcdoc =
-        hook +
-        AMDSupport +
-        `<style>${css}</style>${html}<script>${js}</script><script>${ts_js};require(["index"])</script>`
-    } else {
-      output_ref.current.srcdoc =
-        hook + `<style>${css}</style>${html}<script>${js}</script>`
+      if (ts_js.includes("define")) {
+        ts_js = ts_js.replace(/define\(/, 'define("index",')
+        code += AMDSupport + `<script>${ts_js};require(["index"])</script>`
+      } else {
+        code += `<script>${ts_js}</script>`
+      }
     }
+
+    output_ref.current.srcdoc = code
   }
 
   // console receive
@@ -390,6 +391,12 @@ const App = () => {
               borderBottom: "1px solid #ababab"
             }}
           />
+          <button
+            className="ButtonHigh"
+            onclick={() => openModel(ModuleManager)}
+          >
+            Module
+          </button>
           <button className="ButtonHigh" onclick={switchDiff}>
             Diff
           </button>

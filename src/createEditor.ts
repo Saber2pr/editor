@@ -178,7 +178,9 @@ export const createTSXModel = (content: string) => {
     module: monaco.languages.typescript.ModuleKind["AMD"],
     allowSyntheticDefaultImports: true,
     esModuleInterop: true,
-    allowJs: true
+    allowJs: true,
+    experimentalDecorators: true,
+    downlevelIteration: true
   })
   return monaco.editor.createModel(
     content,

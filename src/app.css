@@ -50,6 +50,7 @@ body {
 .App {
   height: 100vh;
   display: flex;
+  background-color: inherit;
 }
 
 .Main {
@@ -61,6 +62,7 @@ body {
 .Aside {
   flex-grow: 1;
   position: relative;
+  background-color: inherit;
 }
 
 .Aside > iframe {
@@ -107,6 +109,7 @@ body {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
+  background-color: inherit;
 }
 
 .Aside iframe {
@@ -159,4 +162,8 @@ body {
   height: 13.5rem;
   overflow: auto;
   padding: 0 0.5rem;
+}
+
+#root {
+  background-color: inherit;
 }
