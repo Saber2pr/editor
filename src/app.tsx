@@ -31,13 +31,7 @@ import {
 import { openModel } from "./components/model/model"
 import { Settings, ModuleManager } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
-
-const defaults = {
-  javascript: localStorage.getItem(__LS_JS__) || `// input code here...\n`,
-  typescript: localStorage.getItem(__LS_TS__),
-  css: localStorage.getItem(__LS_CSS__),
-  html: localStorage.getItem(__LS_HTML__)
-}
+import { loadSamples } from "./samples"
 
 const FILES = {
   current: "javascript",
@@ -87,7 +81,17 @@ const App = () => {
   const console_ref = useRef<"div">()
   const aside_console_ref = useRef<"div">()
 
-  useEffect(() => {
+  useEffect(async () => {
+    let defaults = {
+      javascript: localStorage.getItem(__LS_JS__),
+      typescript: localStorage.getItem(__LS_TS__),
+      css: localStorage.getItem(__LS_CSS__),
+      html: localStorage.getItem(__LS_HTML__)
+    }
+    if (Object.keys(defaults).every(k => !defaults[k])) {
+      defaults = await loadSamples()
+    }
+
     editor = createEditor(ref.current, defaults)
     window["editor"] = editor.getInstance()
     editorHeight = editor.getSize().height
@@ -148,10 +152,12 @@ const App = () => {
     const scripts = localStorage.getItem(__LS_ARG__)
     eval(scripts)
 
-    // init finish
-    addReactSupport().finally(() => {
-      LOADING.destroy()
-    })
+    await addReactSupport()
+
+    // init finished
+    LOADING.destroy()
+
+    run()
   })
 
   const run = async () => {
@@ -173,7 +179,8 @@ const App = () => {
       let ts_js = await compileTS(editor.getModel("typescript").uri)
       if (ts_js.includes("define")) {
         ts_js = ts_js.replace(/define\(/, 'define("index",')
-        code = AMDSupport + code + `<script>${ts_js};require(["index"])</script>`
+        code =
+          AMDSupport + code + `<script>${ts_js};require(["index"])</script>`
       } else {
         code += `<script>${ts_js}</script>`
       }
