@@ -173,7 +173,7 @@ const App = () => {
       let ts_js = await compileTS(editor.getModel("typescript").uri)
       if (ts_js.includes("define")) {
         ts_js = ts_js.replace(/define\(/, 'define("index",')
-        code += AMDSupport + `<script>${ts_js};require(["index"])</script>`
+        code = AMDSupport + code + `<script>${ts_js};require(["index"])</script>`
       } else {
         code += `<script>${ts_js}</script>`
       }
