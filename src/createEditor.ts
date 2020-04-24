@@ -10,26 +10,28 @@ interface DefaultValues {
   [type: string]: string
 }
 
+const commonOptions = {
+  tabSize: 2,
+  wordWrap: "on"
+}
+
 export function createEditor(
   editorContainer: HTMLElement,
   defaultValues: DefaultValues
 ) {
   const data = Object.fromEntries(
-    Object.entries(defaultValues).map(([type, value]) => [
-      type,
-      {
-        state: null as monaco.editor.ICodeEditorViewState,
-        model:
-          type === "typescript"
-            ? createTSXModel(value)
-            : monaco.editor.createModel(value, type)
-      }
-    ])
+    Object.entries(defaultValues).map(([type, value]) => {
+      const model =
+        type === "typescript"
+          ? createTSXModel(value)
+          : monaco.editor.createModel(value, type)
+      model.updateOptions(commonOptions)
+      return [type, { state: null, model }]
+    })
   )
   const defaultLang = Object.keys(defaultValues)[0]
   const editor = monaco.editor.create(editorContainer, {
-    model: data[defaultLang].model,
-    tabSize: 2
+    model: data[defaultLang].model
   })
   function setValue(value: string): void
   function setValue(type: string, value: string): void
@@ -142,8 +144,8 @@ export const createDiffEditor = (
   const originalModel = monaco.editor.createModel(original, "text/plain")
   const modifiedModel = monaco.editor.createModel(modified, "text/plain")
 
-  originalModel.updateOptions({ tabSize: 2 })
-  modifiedModel.updateOptions({ tabSize: 2 })
+  originalModel.updateOptions(commonOptions)
+  modifiedModel.updateOptions(commonOptions)
 
   const diffEditor = monaco.editor.createDiffEditor(container)
   diffEditor.setModel({
