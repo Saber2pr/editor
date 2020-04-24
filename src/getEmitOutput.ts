@@ -24,6 +24,8 @@ const hook_console = `<script data-type="console-hook">
 const AMDSupport = `<script src="https://saber2pr.gitee.io/libs/requirejs/require.min.js"></script>
 <script src="https://saber2pr.gitee.io/libs/requirejs/config.js"></script>`
 
+const enClosure = (code: string) => `;(function(){${code}})();`
+
 export const getEmitOutput = async editor => {
   const js = editor.getValue("javascript")
   const html = editor.getValue("html")
@@ -36,15 +38,16 @@ export const getEmitOutput = async editor => {
   localStorage.setItem(__LS_CSS__, css)
   localStorage.setItem(__LS_TS__, typescript)
 
-  let code = hook_console + `<style>${css}</style>${html}<script>${js}</script>`
-
+  let code =
+    hook_console +
+    `<style>${css}</style>${html}<script>${enClosure(js)}</script>`
   if (!!typescript) {
     let ts_js = await compileTS(editor.getModel("typescript").uri)
     if (ts_js.includes("define")) {
       ts_js = ts_js.replace(/define\(/, 'define("index",')
       code = AMDSupport + code + `<script>${ts_js};require(["index"])</script>`
     } else {
-      code += `<script>${ts_js}</script>`
+      code += `<script>${enClosure(ts_js)}</script>`
     }
   }
 
