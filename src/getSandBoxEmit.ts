@@ -17,5 +17,5 @@ export const getSandBoxEmit = (sandbox: HTMLIFrameElement) => {
     requiremodule.forEach(n => n.remove())
   }
 
-  return `<html>${doc.firstElementChild.innerHTML}</html>`
+  return `<!DOCTYPE html><html>${doc.firstElementChild.innerHTML}</html>`
 }
