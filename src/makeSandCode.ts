@@ -24,7 +24,9 @@ const hook_console = `<script data-type="console-hook">
 const AMDSupport = `<script src="https://saber2pr.gitee.io/libs/requirejs/require.min.js"></script>
 <script src="https://saber2pr.gitee.io/libs/requirejs/config.js"></script>`
 
-const enClosure = (code: string) => `;(function(){${code}})();`
+const enClosure = (code: string) => `;(function(){
+${code}
+})();`
 
 export const makeSandCode = async editor => {
   const js = editor.getValue("javascript")
