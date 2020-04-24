@@ -108,7 +108,6 @@ body {
   height: 1.5rem;
   height: calc(1.5rem + 1px);
   display: flex;
-  justify-content: space-between;
   overflow: hidden;
   background-color: inherit;
 }

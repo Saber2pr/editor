@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-23 13:14:10
+ * @Last Modified time: 2020-04-24 15:31:35
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -12,8 +12,8 @@ import {
   EditorAPI,
   DiffEditorAPI,
   createDiffEditor,
-  compileTS,
-  addModuleDeclaration
+  addModuleDeclaration,
+  compileTS
 } from "./createEditor"
 import "./app.css"
 import {
@@ -32,37 +32,23 @@ import { openModel } from "./components/model/model"
 import { Settings, ModuleManager } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples } from "./samples"
+import { getEmitOutput } from "./getEmitOutput"
+import { getSandBoxEmit } from "./getSandBoxEmit"
 
 const FILES = {
-  current: "javascript",
+  current: "typescript",
   javascript: "main.js",
   typescript: "main.tsx",
   css: "style.css",
   html: "index.html"
 }
 
-const hook_console = `<script>
-;(() => {
-	// hook
-	var origin_log = console.log
-	console.log = function() {
-		origin_log.apply(this, arguments)
-		var output = Array.from(arguments).join(" ")
-		top.postMessage({method: "console", value: output}, top.location.origin)
-	}
-	window.addEventListener('error', event => {
-		top.postMessage({method: "console-error", value: event.message}, top.location.origin)
-	})
-})()</script>`
-
-const addReactSupport = async () => {
+const addDefaultDeclarations = async () => {
   await addModuleDeclaration("/libs/react/index.d.ts", "react")
   await addModuleDeclaration("/libs/react-dom/index.d.ts", "react-dom")
   await addModuleDeclaration("/libs/csstype/index.d.ts", "csstype")
   await addModuleDeclaration("/libs/prop-types/index.d.ts", "prop-types")
 }
-const AMDSupport = `<script src="/libs/requirejs/require.min.js"></script>
-<script src="/libs/requirejs/config.js"></script>`
 
 const App = () => {
   let editor: EditorAPI
@@ -83,8 +69,8 @@ const App = () => {
 
   useEffect(async () => {
     let defaults = {
-      javascript: localStorage.getItem(__LS_JS__),
       typescript: localStorage.getItem(__LS_TS__),
+      javascript: localStorage.getItem(__LS_JS__),
       css: localStorage.getItem(__LS_CSS__),
       html: localStorage.getItem(__LS_HTML__)
     }
@@ -152,7 +138,14 @@ const App = () => {
     const scripts = localStorage.getItem(__LS_ARG__)
     eval(scripts)
 
-    await addReactSupport()
+    await addDefaultDeclarations()
+
+    // export apis
+    window["compileTS"] = async () => {
+      const result = await compileTS(editor.getModel("typescript").uri)
+      console.log(result)
+      return result
+    }
 
     // init finished
     LOADING.destroy()
@@ -161,31 +154,8 @@ const App = () => {
   })
 
   const run = async () => {
-    const js = editor.getValue("javascript")
-    const html = editor.getValue("html")
-    const css = editor.getValue("css")
-    const typescript = editor.getValue("typescript")
-
-    localStorage.setItem(__LS_JS__, js)
-    localStorage.setItem(__LS_HTML__, html)
-    localStorage.setItem(__LS_CSS__, css)
-    localStorage.setItem(__LS_TS__, typescript)
-
-    let code =
-      hook_console + `<style>${css}</style>${html}<script>${js}</script>`
-
-    if (!!typescript) {
-      output_ref.current.srcdoc = "[TS]: Compiling..."
-      let ts_js = await compileTS(editor.getModel("typescript").uri)
-      if (ts_js.includes("define")) {
-        ts_js = ts_js.replace(/define\(/, 'define("index",')
-        code =
-          AMDSupport + code + `<script>${ts_js};require(["index"])</script>`
-      } else {
-        code += `<script>${ts_js}</script>`
-      }
-    }
-
+    output_ref.current.srcdoc = "[TS]: Compiling..."
+    const code = await getEmitOutput(editor)
     output_ref.current.srcdoc = code
   }
 
@@ -255,23 +225,30 @@ const App = () => {
 
   const dl_ref = useRef<"a">()
 
-  function download() {
+  function download(type: "file" | "index" = "file") {
     const aLink = dl_ref.current
     let fileName: string
     let content: string
 
-    if (FILES.current === "javascript") {
-      fileName = FILES.javascript
-      content = editor.getValue("javascript")
-    } else if (FILES.current === "css") {
-      fileName = FILES.css
-      content = editor.getValue("css")
-    } else if (FILES.current === "html") {
-      fileName = FILES.html
-      content = editor.getValue("html")
-    } else if (FILES.current === "typescript") {
-      fileName = FILES.typescript
-      content = editor.getValue("typescript")
+    if (type === "file") {
+      if (FILES.current === "javascript") {
+        fileName = FILES.javascript
+        content = editor.getValue("javascript")
+      } else if (FILES.current === "css") {
+        fileName = FILES.css
+        content = editor.getValue("css")
+      } else if (FILES.current === "html") {
+        fileName = FILES.html
+        content = editor.getValue("html")
+      } else if (FILES.current === "typescript") {
+        fileName = FILES.typescript
+        content = editor.getValue("typescript")
+      }
+    }
+
+    if (type === "index") {
+      fileName = "index.html"
+      content = getSandBoxEmit(output_ref.current)
     }
 
     const blob = new Blob([content])
@@ -373,7 +350,7 @@ const App = () => {
             CSS
           </button>
           <button
-            className="ButtonHigh ButtonHigh-Active"
+            className="ButtonHigh"
             onclick={e => {
               editor.changeModel("javascript")
               activeBtn(e.target)
@@ -383,7 +360,7 @@ const App = () => {
             JS
           </button>
           <button
-            className="ButtonHigh"
+            className="ButtonHigh ButtonHigh-Active"
             onclick={e => {
               editor.changeModel("typescript")
               activeBtn(e.target)
@@ -430,7 +407,7 @@ const App = () => {
           <button
             className="ButtonHigh"
             style={{ float: "right" }}
-            onclick={download}
+            onclick={() => download("file")}
           >
             Download
           </button>
@@ -472,6 +449,10 @@ const App = () => {
           <button className="ButtonHigh" onclick={run}>
             Run
           </button>
+          <button className="ButtonHigh" onclick={() => download("index")}>
+            Export
+          </button>
+          <div style={{ flexGrow: "1" }} />
           <div
             style={{
               lineHeight: "1.5rem",

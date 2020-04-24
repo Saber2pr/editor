@@ -5,19 +5,21 @@ interface Defaults {
   html: string
 }
 
+const samples = [
+  "/libs/samples/main.tsx",
+  "/libs/samples/main.js",
+  "/libs/samples/style.css",
+  "/libs/samples/index.html"
+]
+
 export const loadSamples = async (): Promise<Defaults> => {
-  const html = await fetch("/libs/samples/index.html").then(res => res.text())
-  const javascript = await fetch("/libs/samples/main.js").then(res =>
-    res.text()
+  const [typescript, javascript, css, html] = await Promise.all(
+    samples.map(sample => fetch(sample).then(res => res.text()))
   )
-  const typescript = await fetch("/libs/samples/main.tsx").then(res =>
-    res.text()
-  )
-  const css = await fetch("/libs/samples/style.css").then(res => res.text())
 
   return {
-    javascript,
     typescript,
+    javascript,
     css,
     html
   }
