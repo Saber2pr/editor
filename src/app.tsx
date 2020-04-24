@@ -249,6 +249,7 @@ const App = () => {
     if (type === "index") {
       fileName = "index.html"
       content = getSandBoxEmit(output_ref.current)
+      run() // reset iframe document.
     }
 
     const blob = new Blob([content])
