@@ -1,11 +1,7 @@
 # @saber2pr/editor
 
-> a web ide, powered by monaco-editor.
+> a web editor for react, powered by monaco-editor.
 
-# What
+# Start
 
-```ts
-createEditor(document.body, {
-  typescript: 'console.log("test")'
-})
-```
+[![loading...](https://saber2pr.top/MyWeb/resource/image/editorOnline.webp)](https://saber2pr.gitee.io/editor-online/)
