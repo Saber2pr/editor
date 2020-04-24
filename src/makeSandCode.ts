@@ -26,7 +26,7 @@ const AMDSupport = `<script src="https://saber2pr.gitee.io/libs/requirejs/requir
 
 const enClosure = (code: string) => `;(function(){${code}})();`
 
-export const getEmitOutput = async editor => {
+export const makeSandCode = async editor => {
   const js = editor.getValue("javascript")
   const html = editor.getValue("html")
   const css = editor.getValue("css")

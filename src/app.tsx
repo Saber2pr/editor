@@ -32,7 +32,7 @@ import { openModel } from "./components/model/model"
 import { Settings, ModuleManager } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples } from "./samples"
-import { getEmitOutput } from "./getEmitOutput"
+import { makeSandCode } from "./makeSandCode"
 import { getSandBoxEmit } from "./getSandBoxEmit"
 
 const FILES = {
@@ -155,7 +155,7 @@ const App = () => {
 
   const run = async () => {
     output_ref.current.srcdoc = "[TS]: Compiling..."
-    const code = await getEmitOutput(editor)
+    const code = await makeSandCode(editor)
     output_ref.current.srcdoc = code
   }
 
