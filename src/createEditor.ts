@@ -28,7 +28,8 @@ export function createEditor(
   )
   const defaultLang = Object.keys(defaultValues)[0]
   const editor = monaco.editor.create(editorContainer, {
-    model: data[defaultLang].model
+    model: data[defaultLang].model,
+    tabSize: 2
   })
   function setValue(value: string): void
   function setValue(type: string, value: string): void
@@ -140,6 +141,9 @@ export const createDiffEditor = (
 ) => {
   const originalModel = monaco.editor.createModel(original, "text/plain")
   const modifiedModel = monaco.editor.createModel(modified, "text/plain")
+
+  originalModel.updateOptions({ tabSize: 2 })
+  modifiedModel.updateOptions({ tabSize: 2 })
 
   const diffEditor = monaco.editor.createDiffEditor(container)
   diffEditor.setModel({
