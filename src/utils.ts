@@ -4,7 +4,7 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-04-22 20:07:06
  */
-export const debounce = (callback: Function, delta = 1000, id = "default") => {
+export const debounce = (callback: Function, delta = 500, id = "default") => {
   clearTimeout(debounce[id])
   debounce[id] = setTimeout(callback, delta)
 }
