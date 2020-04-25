@@ -187,7 +187,9 @@ export const createTSXModel = (content: string) => {
     esModuleInterop: true,
     allowJs: true,
     experimentalDecorators: true,
-    downlevelIteration: true
+    emitDecoratorMetadata: true,
+    downlevelIteration: true,
+    removeComments: true
   })
   return monaco.editor.createModel(
     content,
@@ -213,3 +215,5 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
     moduleName
   )
 }
+// export api for scripts.
+window["addModuleDeclaration"] = addModuleDeclaration

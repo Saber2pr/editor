@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-25 13:53:29
+ * @Last Modified time: 2020-04-25 15:44:03
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -34,6 +34,7 @@ import { loadSamples } from "./samples"
 import { makeSandCode } from "./makeSandCode"
 import { getSandBoxEmit } from "./getSandBoxEmit"
 import { addDefaultDeclarations } from "./defaults"
+import { initKeyBoard } from "./keyboard"
 
 const FILES = {
   current: "typescript",
@@ -139,6 +140,13 @@ const App = () => {
       console.log(result)
       return result
     }
+
+    // init keyboard
+    initKeyBoard({
+      onSave() {
+        run()
+      }
+    })
 
     // init finished
     LOADING.destroy()
