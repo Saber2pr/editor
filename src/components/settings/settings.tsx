@@ -64,16 +64,7 @@ export const Settings = ({ close }: { close: Function }) => {
             </td>
           </tr>
           <tr>
-            <th>
-              <span title="execute when editor running">script</span>
-              <a
-                style={{ color: "inherit" }}
-                href={DOC_script}
-                title="open api document."
-              >
-                [doc]
-              </a>
-            </th>
+            <th title="execute when editor running">script</th>
             <td>
               <textarea
                 defaultValue={localStorage.getItem(__LS_ARG__) || ""}
@@ -107,6 +98,12 @@ export const Settings = ({ close }: { close: Function }) => {
           }}
         >
           reset
+        </button>
+        <button
+          className="ButtonHigh"
+          onclick={() => window.open(DOC_script, "_blank")}
+        >
+          open-api
         </button>
       </div>
     </div>
