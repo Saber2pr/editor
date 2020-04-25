@@ -11,8 +11,7 @@ import { __LS_BG__, __LS_BG_OP__, __LS_ARG__ } from "../../constants"
 import "./settings.css"
 import { addModuleDeclaration } from "../../createEditor"
 
-const DOC_script =
-  "https://github.com/Saber2pr/editor/blob/master/doc/script.md"
+const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
 
 export const Settings = ({ close }: { close: Function }) => {
   const bg_ref = useRef<"input">()
@@ -68,7 +67,7 @@ export const Settings = ({ close }: { close: Function }) => {
             <th>
               <span title="execute when editor running">script</span>
               <a
-                style="color: inherit;"
+                style={{ color: "inherit" }}
                 href={DOC_script}
                 title="open api document."
               >
