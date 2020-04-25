@@ -21,19 +21,6 @@ const hook_console = `<script data-type="console-hook">
 	})
 })()</script>`
 
-const AMDSupport = `<script src="https://cdn.bootcss.com/require.js/2.3.6/require.min.js"></script>
-<script>
-	var unpkgPath = modName =>
-		"https://unpkg.com/"+modName+"/umd/"+modName+".production.min.js"
-	var oldLoad = requirejs.load
-	requirejs.load = function(context, id, url) {
-		if (["react", "react-dom"].indexOf(id) != -1) {
-			url = unpkgPath(id)
-		}
-		return oldLoad.call(requirejs, context, id, url)
-	}
-</script>`
-
 const enClosure = (code: string) => `;(function(){
 ${code}
 })();`
@@ -57,7 +44,7 @@ export const makeSandCode = async editor => {
     let ts_js = await compileTS(editor.getModel("typescript").uri)
     if (ts_js.includes("define")) {
       ts_js = ts_js.replace(/define\(/, 'define("index",')
-      code = AMDSupport + code + `<script>${ts_js};require(["index"])</script>`
+      code += `<script>${ts_js};require(["index"])</script>`
     } else {
       code += `<script>${enClosure(ts_js)}</script>`
     }

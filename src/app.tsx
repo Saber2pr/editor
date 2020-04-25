@@ -33,7 +33,6 @@ import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples } from "./samples"
 import { makeSandCode } from "./makeSandCode"
 import { getSandBoxEmit } from "./getSandBoxEmit"
-import { addDefaultDeclarations } from "./defaults"
 import { initKeyBoard } from "./keyboard"
 
 const FILES = {
@@ -142,9 +141,6 @@ const App = () => {
       return result
     }
     window["api_getSandBoxEmit"] = () => getSandBoxEmit(output_ref.current)
-
-    // get default declarations
-    await addDefaultDeclarations()
 
     // init finished
     LOADING.destroy()
