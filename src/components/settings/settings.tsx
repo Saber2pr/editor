@@ -11,6 +11,9 @@ import { __LS_BG__, __LS_BG_OP__, __LS_ARG__ } from "../../constants"
 import "./settings.css"
 import { addModuleDeclaration } from "../../createEditor"
 
+const DOC_script =
+  "https://github.com/Saber2pr/editor/blob/master/doc/script.md"
+
 export const Settings = ({ close }: { close: Function }) => {
   const bg_ref = useRef<"input">()
   const bg_op_ref = useRef<"input">()
@@ -62,7 +65,16 @@ export const Settings = ({ close }: { close: Function }) => {
             </td>
           </tr>
           <tr>
-            <th title="execute when editor running">script</th>
+            <th>
+              <span title="execute when editor running">script</span>
+              <a
+                style="color: inherit;"
+                href={DOC_script}
+                title="open api document."
+              >
+                [doc]
+              </a>
+            </th>
             <td>
               <textarea
                 defaultValue={localStorage.getItem(__LS_ARG__) || ""}

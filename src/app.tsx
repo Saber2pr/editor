@@ -73,11 +73,11 @@ const App = () => {
     }
 
     editor = createEditor(ref.current, defaults)
-    window["editor"] = editor.getInstance()
+    window["api_editor"] = editor.getInstance()
     editorHeight = editor.getSize().height
 
     diffEditor = createDiffEditor(diff_ref.current, "", "")
-    window["diffEditor"] = diffEditor.instance
+    window["api_diffEditor"] = diffEditor.instance
     const { width, height } = editor.getSize()
     diffEditor.setSize(width, height)
 
@@ -135,11 +135,12 @@ const App = () => {
     await addDefaultDeclarations()
 
     // export apis
-    window["compileTS"] = async () => {
+    window["api_compileTS"] = async () => {
       const result = await compileTS(editor.getModel("typescript").uri)
       console.log(result)
       return result
     }
+    window["api_getSandBoxEmit"] = () => getSandBoxEmit(output_ref.current)
 
     // init keyboard
     initKeyBoard({

@@ -216,4 +216,4 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
   )
 }
 // export api for scripts.
-window["addModuleDeclaration"] = addModuleDeclaration
+window["api_addModuleDeclaration"] = addModuleDeclaration
