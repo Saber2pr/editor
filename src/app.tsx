@@ -128,11 +128,12 @@ const App = () => {
       run()
     })
 
-    // execute scripts
-    const scripts = localStorage.getItem(__LS_ARG__)
-    eval(scripts)
-
-    await addDefaultDeclarations()
+    // init keyboard
+    initKeyBoard({
+      onSave() {
+        run()
+      }
+    })
 
     // export apis
     window["api_compileTS"] = async () => {
@@ -142,15 +143,15 @@ const App = () => {
     }
     window["api_getSandBoxEmit"] = () => getSandBoxEmit(output_ref.current)
 
-    // init keyboard
-    initKeyBoard({
-      onSave() {
-        run()
-      }
-    })
+    // get default declarations
+    await addDefaultDeclarations()
 
     // init finished
     LOADING.destroy()
+
+    // execute scripts
+    const scripts = localStorage.getItem(__LS_ARG__)
+    eval(scripts)
 
     run()
   })
