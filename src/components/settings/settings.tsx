@@ -132,7 +132,7 @@ export const ModuleManager = ({ close }) => {
           </td>
         </tr>
         <tr>
-          <th>URL:</th>
+          <th title="d.ts file's url.">DTS URL:</th>
           <td>
             <input type="url" ref={url_ref} />
           </td>

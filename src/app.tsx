@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-24 15:31:35
+ * @Last Modified time: 2020-04-25 13:53:29
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -12,7 +12,6 @@ import {
   EditorAPI,
   DiffEditorAPI,
   createDiffEditor,
-  addModuleDeclaration,
   compileTS
 } from "./createEditor"
 import "./app.css"
@@ -34,6 +33,7 @@ import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples } from "./samples"
 import { makeSandCode } from "./makeSandCode"
 import { getSandBoxEmit } from "./getSandBoxEmit"
+import { addDefaultDeclarations } from "./defaults"
 
 const FILES = {
   current: "typescript",
@@ -41,13 +41,6 @@ const FILES = {
   typescript: "main.tsx",
   css: "style.css",
   html: "index.html"
-}
-
-const addDefaultDeclarations = async () => {
-  await addModuleDeclaration("/libs/react/index.d.ts", "react")
-  await addModuleDeclaration("/libs/react-dom/index.d.ts", "react-dom")
-  await addModuleDeclaration("/libs/csstype/index.d.ts", "csstype")
-  await addModuleDeclaration("/libs/prop-types/index.d.ts", "prop-types")
 }
 
 const App = () => {

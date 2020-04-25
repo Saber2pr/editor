@@ -5,6 +5,7 @@
  * @Last Modified time: 2020-04-22 22:24:02
  */
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main.js"
+import { getReferencePaths, resolvePath } from "./utils"
 
 interface DefaultValues {
   [type: string]: string
@@ -197,11 +198,18 @@ export const createTSXModel = (content: string) => {
 
 export const addModuleDeclaration = async (url: string, moduleName: string) => {
   const text = await fetch(url).then(res => res.text())
+
+  const paths = getReferencePaths(text)
+  await Promise.all(
+    paths.map(path => {
+      const referPath = resolvePath(url, path)
+      return addModuleDeclaration(referPath, path)
+    })
+  )
+
   const wrapped = `declare module "${moduleName}" { ${text} }`
   monaco.languages.typescript.typescriptDefaults.addExtraLib(
     wrapped,
     moduleName
   )
 }
-// export api.
-window["addModuleDeclaration"] = addModuleDeclaration

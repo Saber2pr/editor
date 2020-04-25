@@ -56,3 +56,30 @@ export const addUploadListener = (callback: (res: FileInfo) => void) => {
     )
   })
 }
+
+export function getReferencePaths(input: string) {
+  const rx = /<reference path="([^"]+)"\s\/>/
+  return (input.match(new RegExp(rx.source, "g")) || []).map(s => {
+    const match = s.match(rx)
+    if (match && match.length >= 2) {
+      return match[1]
+    } else {
+      throw new Error(`Error parsing: "${s}".`)
+    }
+  })
+}
+
+export function resolvePath(base: string, relative: string) {
+  if (!base) return relative
+
+  const stack = base.split("/")
+  const parts = relative.split("/")
+  stack.pop()
+
+  for (var i = 0; i < parts.length; i++) {
+    if (parts[i] == ".") continue
+    if (parts[i] == "..") stack.pop()
+    else stack.push(parts[i])
+  }
+  return stack.join("/")
+}

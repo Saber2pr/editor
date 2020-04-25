@@ -21,8 +21,18 @@ const hook_console = `<script data-type="console-hook">
 	})
 })()</script>`
 
-const AMDSupport = `<script src="https://saber2pr.gitee.io/libs/requirejs/require.min.js"></script>
-<script src="https://saber2pr.gitee.io/libs/requirejs/config.js"></script>`
+const AMDSupport = `<script src="https://cdn.bootcss.com/require.js/2.3.6/require.min.js"></script>
+<script>
+	var unpkgPath = modName =>
+		"https://unpkg.com/"+modName+"/umd/"+modName+".production.min.js"
+	var oldLoad = requirejs.load
+	requirejs.load = function(context, id, url) {
+		if (["react", "react-dom"].indexOf(id) != -1) {
+			url = unpkgPath(id)
+		}
+		return oldLoad.call(requirejs, context, id, url)
+	}
+</script>`
 
 const enClosure = (code: string) => `;(function(){
 ${code}
