@@ -144,7 +144,7 @@ const App = () => {
     // init keyboard
     initKeyBoard({
       onSave() {
-        debounce(run)
+        run()
       }
     })
 
