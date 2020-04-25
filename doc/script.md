@@ -19,10 +19,7 @@ window["api_compileTS"]().then(console.log)
 add d.ts file.
 
 ```ts
-function api_addModuleDeclaration(
-  url: string,
-  moduleName: string
-): Promise<void>
+function api_addModuleDeclaration(url: string, moduleName: string): Promise<any>
 ```
 
 ### 3. api_editor

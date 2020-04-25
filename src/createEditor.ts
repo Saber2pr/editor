@@ -198,7 +198,12 @@ export const createTSXModel = (content: string) => {
   )
 }
 
+const ExtraLibs = {}
 export const addModuleDeclaration = async (url: string, moduleName: string) => {
+  if (moduleName in ExtraLibs) {
+    return ExtraLibs[moduleName]
+  }
+
   const text = await fetch(url).then(res => res.text())
 
   const paths = getReferencePaths(text)
@@ -210,10 +215,11 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
   )
 
   const wrapped = `declare module "${moduleName}" { ${text} }`
-  monaco.languages.typescript.typescriptDefaults.addExtraLib(
+  const lib = monaco.languages.typescript.typescriptDefaults.addExtraLib(
     wrapped,
     moduleName
   )
+  ExtraLibs[moduleName] = lib
 }
 // export api for scripts.
 window["api_addModuleDeclaration"] = addModuleDeclaration
