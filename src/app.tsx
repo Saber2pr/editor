@@ -165,18 +165,25 @@ const App = () => {
     console_ref.current.innerHTML = consoleContent
   }
   const console_style = `line-height:1.5rem;border-bottom: 1px solid #e8e8e8;`
+  const pushConsole = () => {
+    console_ref.current.innerHTML = consoleContent
+    console_ref.current.scrollTo({
+      top: console_ref.current.scrollHeight,
+      behavior: "smooth"
+    })
+  }
   window.addEventListener("message", event => {
     const data = event.data
     if (data.method === "console") {
       consoleContent += `<pre style="${console_style}">${data.value}</pre>`
-      console_ref.current.innerHTML = consoleContent
+      pushConsole()
     }
 
     if (data.method === "console-error") {
       consoleContent += `<pre style="${console_style}color: red;">${
         data.value
       }</pre>`
-      console_ref.current.innerHTML = consoleContent
+      pushConsole()
     }
   })
 
