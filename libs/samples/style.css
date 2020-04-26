@@ -7,6 +7,12 @@ html {
   color: lightskyblue;
 }
 
+#test {
+  border: 1px solid;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
 a {
   color: grey;
 }

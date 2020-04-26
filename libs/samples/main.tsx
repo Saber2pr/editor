@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 
 import Axios from 'axios'
-console.log(Axios.get)
+// console.log(Axios.get)
 
 interface App {
   github: string
@@ -18,7 +18,7 @@ const App = ({ github }: App) => {
 
   return <div>
     <div className="title">
-      <i>SandBox for React 233</i>
+      <i>Code SandBox</i>
     </div>
     <p style={{ color: 'grey' }}>Fork on Github:
         <a href={github} target="_blank">Saber2pr/editor</a>
