@@ -4,6 +4,12 @@
 
 [monaco](https://microsoft.github.io/monaco-editor/api/index.html)
 
+for example:
+
+```js
+top.monaco.editor.setTheme('vs-dark')
+```
+
 ### 1. api_compileTS
 
 get js emitted from ts-compiler.
@@ -15,7 +21,7 @@ function api_compileTS(): Promise<string>
 for example:
 
 ```js
-window["api_compileTS"]().then(console.log)
+top.api_compileTS().then(console.log)
 ```
 
 ### 2. api_addModuleDeclaration
