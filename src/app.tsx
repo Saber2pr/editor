@@ -20,6 +20,7 @@ import {
   __LS_TS__,
   __LS_CSS__,
   __LS_HTML__,
+  __LS_CUR_TAB__,
   __LS_EDITOR_THEME__,
   __LS_EDITOR_WIDTH__,
   __VERSION__,
@@ -97,32 +98,28 @@ const App = () => {
       document.body.style.opacity = String(Number(bgOp) / 100)
     }
 
+    // init current tab
+    const tabIndex = Number(localStorage.getItem(__LS_CUR_TAB__))
+    activeBtn(tabIndex)
+
     // listeners
     addUploadListener(({ name, type, content }) => {
       if (type === "text/html") {
         FILES.html = name
-        editor.changeModel("html")
         editor.setValue("html", content)
         activeBtn(1)
-        FILES.current = "html"
       } else if (type === "text/css") {
         FILES.css = name
-        editor.changeModel("css")
         editor.setValue("css", content)
         activeBtn(2)
-        FILES.current = "css"
       } else if (type === "text/javascript") {
         FILES.javascript = name
-        editor.changeModel("javascript")
         editor.setValue("javascript", content)
         activeBtn(3)
-        FILES.current = "javascript"
       } else if (name.endsWith(".tsx")) {
         FILES.typescript = name
-        editor.changeModel("typescript")
         editor.setValue("typescript", content)
         activeBtn(4)
-        FILES.current = "typescript"
       }
       run()
     })
@@ -187,18 +184,32 @@ const App = () => {
     }
   })
 
-  const activeBtn = (target: EventTarget | number) => {
+  const activeBtn = (target: number) => {
     for (const btn of toolBtns) {
       if (btn.tagName === "BUTTON") {
         btn.className = "ButtonHigh"
       }
     }
-    if (typeof target === "number") {
-      toolBtns[target]["className"] = "ButtonHigh ButtonHigh-Active"
-    } else {
-      target["className"] = "ButtonHigh ButtonHigh-Active"
+    toolBtns[target]["className"] = "ButtonHigh ButtonHigh-Active"
+
+    let type = null
+    if (target === 1) {
+      type = "html"
+    } else if (target === 2) {
+      type = "css"
+    } else if (target === 3) {
+      type = "javascript"
+    } else if (target === 4) {
+      type = "typescript"
+    }
+
+    if (type) {
+      editor.changeModel(type)
+      FILES.current = type
+      localStorage.setItem(__LS_CUR_TAB__, String(target))
     }
   }
+
   const changeAllBtnsDisabled = (disabled = true) => {
     toolBtns[1]["disabled"] = disabled
     toolBtns[2]["disabled"] = disabled
@@ -336,43 +347,18 @@ const App = () => {
               width: "0.5rem"
             }}
           />
-          <button
-            className="ButtonHigh"
-            onclick={e => {
-              editor.changeModel("html")
-              activeBtn(e.target)
-              FILES.current = "html"
-            }}
-          >
+          <button className="ButtonHigh" onclick={() => activeBtn(1)}>
             HTML
           </button>
-          <button
-            className="ButtonHigh"
-            onclick={e => {
-              editor.changeModel("css")
-              activeBtn(e.target)
-              FILES.current = "css"
-            }}
-          >
+          <button className="ButtonHigh" onclick={() => activeBtn(2)}>
             CSS
           </button>
-          <button
-            className="ButtonHigh"
-            onclick={e => {
-              editor.changeModel("javascript")
-              activeBtn(e.target)
-              FILES.current = "javascript"
-            }}
-          >
+          <button className="ButtonHigh" onclick={() => activeBtn(3)}>
             JS
           </button>
           <button
             className="ButtonHigh ButtonHigh-Active"
-            onclick={e => {
-              editor.changeModel("typescript")
-              activeBtn(e.target)
-              FILES.current = "typescript"
-            }}
+            onclick={() => activeBtn(4)}
           >
             TS
           </button>
