@@ -43,7 +43,7 @@ module.exports = WebpackConfig({
     new HtmlWebpackPlugin({
       templateContent: templateContent("Editor", {
         injectHead:
-          '<script src="/libs/loading.min.js"></script><script src="/libs/shouldPCBrowser.min.js"></script>',
+          '<script src="/libs/loading.min.js"></script><script async src="/libs/shouldPCBrowser.min.js"></script>',
         injectBody:
           '<div id="root"></div></div><script>LOADING.init();</script>'
       })

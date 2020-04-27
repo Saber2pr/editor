@@ -99,7 +99,7 @@ const App = () => {
     }
 
     // init current tab
-    const tabIndex = Number(localStorage.getItem(__LS_CUR_TAB__))
+    const tabIndex = Number(localStorage.getItem(__LS_CUR_TAB__) || "4")
     activeBtn(tabIndex)
 
     // listeners
