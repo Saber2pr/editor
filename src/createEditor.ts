@@ -214,7 +214,8 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
     })
   )
 
-  const wrapped = `declare module "${moduleName}" { ${text} }`
+  const isModule = url.endsWith("index.d.ts")
+  const wrapped = isModule ? `declare module "${moduleName}" { ${text} }` : text
   const lib = monaco.languages.typescript.typescriptDefaults.addExtraLib(
     wrapped,
     moduleName
