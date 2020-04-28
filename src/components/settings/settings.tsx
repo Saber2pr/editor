@@ -4,12 +4,9 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-04-23 13:23:34
  */
-declare const LOADING: { init(): void; destroy(): void }
-
 import TSX, { useRef } from "@saber2pr/tsx"
 import { __LS_BG__, __LS_BG_OP__, __LS_ARG__ } from "../../constants"
 import "./settings.css"
-import { addModuleDeclaration } from "../../createEditor"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
 
@@ -104,55 +101,6 @@ export const Settings = ({ close }: { close: Function }) => {
           onclick={() => window.open(DOC_script, "_blank")}
         >
           open-api
-        </button>
-      </div>
-    </div>
-  )
-}
-
-export const ModuleManager = ({ close }) => {
-  const name_ref = useRef<"input">()
-  const url_ref = useRef<"input">()
-
-  const startLoad = async () => {
-    const url = url_ref.current.value
-    const moduleName = name_ref.current.value
-    if (url && moduleName) {
-      LOADING.init()
-      await addModuleDeclaration(url, moduleName)
-      LOADING.destroy()
-    }
-    close()
-  }
-
-  return (
-    <div className="Settings">
-      <div>Module Manager</div>
-      <p style={{ color: "grey", paddingLeft: "1rem", opacity: "0.5" }}>
-        load d.ts file.
-      </p>
-      <br />
-      <table>
-        <tr>
-          <th>Module Name:</th>
-          <td>
-            <input type="url" ref={name_ref} />
-          </td>
-        </tr>
-        <tr>
-          <th title="d.ts file's url.">DTS URL:</th>
-          <td>
-            <input type="url" ref={url_ref} />
-          </td>
-        </tr>
-      </table>
-      <br />
-      <div>
-        <button className="ButtonHigh" onclick={startLoad}>
-          load
-        </button>
-        <button className="ButtonHigh" onclick={close}>
-          cancel
         </button>
       </div>
     </div>

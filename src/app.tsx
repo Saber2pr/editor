@@ -29,7 +29,7 @@ import {
   __LS_ARG__
 } from "./constants"
 import { openModel } from "./components/model/model"
-import { Settings, ModuleManager } from "./components/settings/settings"
+import { Settings } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples, loadScript } from "./samples"
 import { makeSandCode } from "./makeSandCode"
@@ -386,12 +386,6 @@ const App = () => {
               borderBottom: "1px solid #ababab"
             }}
           />
-          <button
-            className="ButtonHigh"
-            onclick={() => openModel(ModuleManager)}
-          >
-            Module
-          </button>
           <button className="ButtonHigh" onclick={switchDiff}>
             Diff
           </button>
@@ -413,7 +407,7 @@ const App = () => {
             className="ButtonHigh"
             onclick={() => openModel(({ close }) => <Settings close={close} />)}
           >
-            Settings
+            Profile
           </button>
           <button
             className="ButtonHigh"
