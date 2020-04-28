@@ -24,3 +24,9 @@ export const loadSamples = async (): Promise<Defaults> => {
     html
   }
 }
+
+export const settings = {
+  script: "/libs/samples/script.js"
+}
+
+export const loadScript = () => fetch(settings.script).then(res => res.text())
