@@ -57,12 +57,18 @@ export const addUploadListener = (callback: (res: FileInfo) => void) => {
   })
 }
 
-export function getReferencePaths(input: string) {
-  const rx = /<reference path="([^"]+)"\s\/>/
+export function getReferPaths(input: string) {
+  const rx = /<reference lib="([^"]+)"\s\/>|<reference path="([^"]+)"\s\/>/
   return (input.match(new RegExp(rx.source, "g")) || []).map(s => {
     const match = s.match(rx)
     if (match && match.length >= 2) {
-      return match[1]
+      if (/lib="/.test(match[0])) {
+        return "lib." + match[1] + ".d.ts"
+      }
+      if (/path="/.test(match[0])) {
+        return match[2]
+      }
+      return null
     } else {
       throw new Error(`Error parsing: "${s}".`)
     }
