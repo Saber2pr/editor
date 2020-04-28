@@ -5,7 +5,7 @@
  * @Last Modified time: 2020-04-22 22:24:02
  */
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main.js"
-import { resolvePath, getReferPaths } from "./utils"
+import { getReferencePaths, resolvePath } from "./utils"
 
 interface DefaultValues {
   [type: string]: string
@@ -206,13 +206,11 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
 
   const text = await fetch(url).then(res => res.text())
 
-  const paths = getReferPaths(text)
+  const paths = getReferencePaths(text)
   await Promise.all(
     paths.map(path => {
-      if (path) {
-        const referPath = resolvePath(url, path)
-        return addModuleDeclaration(referPath, path)
-      }
+      const referPath = resolvePath(url, path)
+      return addModuleDeclaration(referPath, path)
     })
   )
 
