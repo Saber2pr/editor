@@ -31,7 +31,7 @@ import {
 import { openModel } from "./components/model/model"
 import { Settings, ModuleManager } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
-import { loadSamples } from "./samples"
+import { loadSamples, loadScript } from "./samples"
 import { makeSandCode } from "./makeSandCode"
 import { getSandBoxEmit } from "./getSandBoxEmit"
 import { initKeyBoard } from "./keyboard"
@@ -75,11 +75,6 @@ const App = () => {
     editor = createEditor(ref.current, defaults)
     window["api_editor"] = editor.getInstance()
     editorHeight = editor.getSize().height
-
-    diffEditor = createDiffEditor(diff_ref.current, "", "")
-    window["api_diffEditor"] = diffEditor.instance
-    const { width, height } = editor.getSize()
-    diffEditor.setSize(width, height)
 
     toolBtns = Array.from(toolBar_ref.current.children) as any
 
@@ -139,12 +134,17 @@ const App = () => {
     }
     window["api_getSandBoxEmit"] = () => getSandBoxEmit(output_ref.current)
 
+    // execute script
+    let script = localStorage.getItem(__LS_ARG__)
+    if (!script) {
+      script = await loadScript()
+      localStorage.setItem(__LS_ARG__, script)
+    }
+
     // init finished
     LOADING.destroy()
 
-    // execute scripts
-    const scripts = localStorage.getItem(__LS_ARG__)
-    eval(scripts)
+    eval(script)
 
     run()
   })
@@ -235,7 +235,9 @@ const App = () => {
     const asideWidth = docWidth - width
     aside_ref.current.style.width = asideWidth + "px"
     editor.setSize(width, height)
-    diffEditor.setSize(width, height)
+    if (diffEditor) {
+      diffEditor.setSize(width, height)
+    }
     asideSize_ref.current.textContent = `${asideWidth} x ${height}`
     localStorage.setItem(__LS_EDITOR_WIDTH__, String(width))
   }
@@ -276,14 +278,29 @@ const App = () => {
   }
 
   // diff
-  let diff_flag = false
   let diffEditor: DiffEditorAPI = null
 
+  const openDiffEditor = () => {
+    diffEditor = createDiffEditor(diff_ref.current, "", "")
+    window["api_diffEditor"] = diffEditor.instance
+    const { width, height } = editor.getSize()
+    diffEditor.setSize(width, height)
+  }
+
+  const closeDiffEditor = () => {
+    if (diffEditor) {
+      diffEditor.instance.dispose()
+      diffEditor = null
+      window["api_diffEditor"] = null
+    }
+  }
+
   const switchDiff = () => {
-    if (diff_flag) {
-      ref.current.style.display = "block"
+    if (diffEditor) {
+      // close diff
+      closeDiffEditor()
       diff_ref.current.style.display = "none"
-      diff_flag = false
+      ref.current.style.display = "block"
       changeAllBtnsDisabled(false)
 
       // restore state when load.
@@ -292,10 +309,11 @@ const App = () => {
       instance.restoreViewState(state)
       instance.focus()
     } else {
+      // open diff
       ref.current.style.display = "none"
       diff_ref.current.style.display = "block"
-      diff_flag = true
       changeAllBtnsDisabled(true)
+      openDiffEditor()
 
       // save state before unload
       const instance = editor.getInstance()
