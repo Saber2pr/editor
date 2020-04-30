@@ -19,7 +19,7 @@ import { compileTS } from "./createEditor"
 import { enClosure } from "./utils"
 import { ConsoleHook } from "./hooks"
 
-export const makeSandCode = async editor => {
+export const makeSandCode = async (editor, mode: "dev" | "pro" = "dev") => {
   const js = editor.getValue("javascript")
   const html = editor.getValue("html")
   const css = editor.getValue("css")
@@ -33,9 +33,8 @@ export const makeSandCode = async editor => {
   localStorage.setItem(__LS_TS__, typescript)
   localStorage.setItem(__LS_JSON__, json)
 
-  let code =
-    ConsoleHook +
-    `${css && `<style>${css}</style>`}
+  let code = `${mode === "dev" ? ConsoleHook : ""}
+		 ${css && `<style>${css}</style>`}
 		 ${json && `<script>var ${__VAR_JSON__} = ${json};</script>`}
 		 ${html}
 		 ${js && `<script>${enClosure(js)}</script>`}`
@@ -50,5 +49,7 @@ export const makeSandCode = async editor => {
     }
   }
 
-  return code
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(code, "text/html")
+  return `<!DOCTYPE html><html>${doc.children[0].innerHTML}</html>`
 }

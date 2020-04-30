@@ -36,7 +36,6 @@ import { Settings } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples, loadScript } from "./samples"
 import { makeSandCode } from "./makeSandCode"
-import { getSandBoxEmit } from "./getSandBoxEmit"
 import { initKeyBoard } from "./keyboard"
 
 const FILES = {
@@ -150,7 +149,8 @@ const App = () => {
       console.log(result)
       return result
     }
-    window["api_getSandBoxEmit"] = () => getSandBoxEmit(output_ref.current)
+    window["api_makeSandCode"] = (mode: "dev" | "pro" = "dev") =>
+      makeSandCode(editor, mode)
 
     // execute script
     let script = localStorage.getItem(__LS_ARG__)
@@ -169,7 +169,7 @@ const App = () => {
 
   const run = async () => {
     output_ref.current.srcdoc = "[TS]: Compiling..."
-    const code = await makeSandCode(editor)
+    const code = await makeSandCode(editor, "dev")
     output_ref.current.srcdoc = code
   }
 
@@ -264,7 +264,7 @@ const App = () => {
 
   const dl_ref = useRef<"a">()
 
-  function download(type: "file" | "index" = "file") {
+  async function download(type: "file" | "index" = "file") {
     const aLink = dl_ref.current
     let fileName: string
     let content: string
@@ -290,8 +290,7 @@ const App = () => {
 
     if (type === "index") {
       fileName = "index.html"
-      content = getSandBoxEmit(output_ref.current)
-      run() // reset iframe document.
+      content = await makeSandCode(editor, "pro")
     }
 
     const blob = new Blob([content])

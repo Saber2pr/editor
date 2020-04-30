@@ -7,7 +7,7 @@
 for example:
 
 ```js
-top.monaco.editor.setTheme('vs-dark')
+top.monaco.editor.setTheme("vs-dark")
 ```
 
 ### 1. api_compileTS
@@ -48,10 +48,12 @@ const api_diffEditor: IStandaloneCodeEditor
 
 [IStandaloneCodeEditor](https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.istandalonecodeeditor.html)
 
-### 5. api_getSandBoxEmit
+### 5. api_makeSandCode
 
 get html output string from sandbox.
 
 ```ts
-function api_getSandBoxEmit(): string
+function api_makeSandCode(mode?: "dev" | "pro"): Promise<string>
 ```
+
+`mode` {default}-"dev"
