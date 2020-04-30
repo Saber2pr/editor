@@ -35,9 +35,10 @@ export const makeSandCode = async editor => {
 
   let code =
     ConsoleHook +
-    `<style>${css}</style>
-		 <script data-type="${__VAR_JSON__}">var ${__VAR_JSON__} = ${json};</script>
-		 ${html}<script>${enClosure(js)}</script>`
+    `${css && `<style>${css}</style>`}
+		 ${json && `<script>var ${__VAR_JSON__} = ${json};</script>`}
+		 ${html}
+		 ${js && `<script>${enClosure(js)}</script>`}`
 
   if (!!typescript) {
     let ts_js = await compileTS(editor.getModel("typescript").uri)
