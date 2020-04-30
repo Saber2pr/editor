@@ -134,15 +134,6 @@ const App = () => {
       }
     })
 
-    // init sandbox
-    output_ref.current.sandbox.add(
-      "allow-forms",
-      "allow-popups",
-      "allow-scripts",
-      "allow-same-origin",
-      "allow-modals"
-    )
-
     // export apis
     window["api_compileTS"] = async () => {
       const result = await compileTS(editor.getModel("typescript").uri)
