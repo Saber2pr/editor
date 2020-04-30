@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-25 15:44:03
+ * @Last Modified time: 2020-04-30 14:44:49
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -26,7 +26,10 @@ import {
   __VERSION__,
   __LS_BG__,
   __LS_BG_OP__,
-  __LS_ARG__
+  __LS_ARG__,
+  __LS_JSON__,
+  __MESSAGE_CONSOLE__,
+  __MESSAGE_CONSOLE_ERROR__
 } from "./constants"
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
@@ -40,6 +43,7 @@ const FILES = {
   current: "typescript",
   javascript: "main.js",
   typescript: "main.tsx",
+  json: "data.json",
   css: "style.css",
   html: "index.html"
 }
@@ -66,7 +70,8 @@ const App = () => {
       typescript: localStorage.getItem(__LS_TS__),
       javascript: localStorage.getItem(__LS_JS__),
       css: localStorage.getItem(__LS_CSS__),
-      html: localStorage.getItem(__LS_HTML__)
+      html: localStorage.getItem(__LS_HTML__),
+      json: localStorage.getItem(__LS_JSON__)
     }
     if (Object.keys(defaults).every(k => !defaults[k])) {
       defaults = await loadSamples()
@@ -111,10 +116,14 @@ const App = () => {
         FILES.javascript = name
         editor.setValue("javascript", content)
         activeBtn(3)
-      } else if (name.endsWith(".tsx")) {
+      } else if (name.endsWith(".tsx") || name.endsWith(".ts")) {
         FILES.typescript = name
         editor.setValue("typescript", content)
         activeBtn(4)
+      } else if (name.endsWith(".json")) {
+        FILES.json = name
+        editor.setValue("json", content)
+        activeBtn(5)
       }
       run()
     })
@@ -125,6 +134,15 @@ const App = () => {
         run()
       }
     })
+
+    // init sandbox
+    output_ref.current.sandbox.add(
+      "allow-forms",
+      "allow-popups",
+      "allow-scripts",
+      "allow-same-origin",
+      "allow-modals"
+    )
 
     // export apis
     window["api_compileTS"] = async () => {
@@ -171,12 +189,11 @@ const App = () => {
   }
   window.addEventListener("message", event => {
     const data = event.data
-    if (data.method === "console") {
+    if (data.method === __MESSAGE_CONSOLE__) {
       consoleContent += `<pre style="${console_style}">${data.value}</pre>`
       pushConsole()
     }
-
-    if (data.method === "console-error") {
+    if (data.method === __MESSAGE_CONSOLE_ERROR__) {
       consoleContent += `<pre style="${console_style}color: red;">${
         data.value
       }</pre>`
@@ -201,6 +218,8 @@ const App = () => {
       type = "javascript"
     } else if (target === 4) {
       type = "typescript"
+    } else if (target === 5) {
+      type = "json"
     }
 
     if (type) {
@@ -215,6 +234,7 @@ const App = () => {
     toolBtns[2]["disabled"] = disabled
     toolBtns[3]["disabled"] = disabled
     toolBtns[4]["disabled"] = disabled
+    toolBtns[5]["disabled"] = disabled
   }
 
   const aside_ref = useRef<"aside">()
@@ -262,6 +282,9 @@ const App = () => {
       } else if (FILES.current === "typescript") {
         fileName = FILES.typescript
         content = editor.getValue("typescript")
+      } else if (FILES.current === "json") {
+        fileName = FILES.json
+        content = editor.getValue("json")
       }
     }
 
@@ -379,6 +402,13 @@ const App = () => {
             onclick={() => activeBtn(4)}
           >
             TS
+          </button>
+          <button
+            className="ButtonHigh"
+            title="var __VAR_JSON__"
+            onclick={() => activeBtn(5)}
+          >
+            JSON
           </button>
           <div
             style={{

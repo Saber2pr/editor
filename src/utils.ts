@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-12 21:03:23
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-22 20:07:06
+ * @Last Modified time: 2020-04-30 14:09:51
  */
 export const debounce = (callback: Function, delta = 500, id = "default") => {
   clearTimeout(debounce[id])
@@ -83,3 +83,7 @@ export function resolvePath(base: string, relative: string) {
   }
   return stack.join("/")
 }
+
+export const enClosure = (code: string) => `;(function(){
+	${code}
+	})();`

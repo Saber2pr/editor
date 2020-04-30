@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-10 15:05:30
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-22 22:24:02
+ * @Last Modified time: 2020-04-30 14:28:51
  */
 import * as monaco from "monaco-editor/esm/vs/editor/editor.main.js"
 import { getReferencePaths, resolvePath } from "./utils"
@@ -200,8 +200,9 @@ export const createTSXModel = (content: string) => {
 
 const ExtraLibs = {}
 export const addModuleDeclaration = async (url: string, moduleName: string) => {
-  if (moduleName in ExtraLibs) {
-    return ExtraLibs[moduleName]
+  const key = moduleName.concat(url)
+  if (key in ExtraLibs) {
+    return ExtraLibs[key]
   }
 
   const text = await fetch(url).then(res => res.text())
@@ -220,7 +221,7 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
     wrapped,
     moduleName
   )
-  ExtraLibs[moduleName] = lib
+  ExtraLibs[key] = lib
 }
 // export api for scripts.
 window["api_addModuleDeclaration"] = addModuleDeclaration
