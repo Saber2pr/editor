@@ -4,11 +4,15 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-04-24 14:58:27
  */
+import { __SANDBOX_HOOK__ } from "./constants"
+
 export const getSandBoxEmit = (sandbox: HTMLIFrameElement) => {
   const doc = sandbox.contentDocument
 
   // remove hook
-  const console_hook = doc.querySelector('script[data-type="console-hook"]')
+  const console_hook = doc.querySelector(
+    `script[data-type="${__SANDBOX_HOOK__}"]`
+  )
   console_hook.remove()
 
   // remove amd-modules loaded.
