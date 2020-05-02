@@ -64,20 +64,21 @@ body {
   flex-grow: 1;
   position: relative;
   background-color: inherit;
+  border-left: 1px solid #80808085;
 }
 
 .Aside > iframe {
   width: 100%;
-  height: 100%;
+  height: 95%;
+  height: calc(100% - 3rem + 1px);
   border: none;
   position: absolute;
+  background: white;
 }
 
 .Aside-Btn {
   float: left;
-  width: 1px;
   height: 100%;
-  background: #e0e0e0;
 }
 
 .Aside-Size {
@@ -94,12 +95,12 @@ body {
 
 .Aside-Btn::after {
   content: "";
-  cursor: ew-resize;
+  cursor: col-resize;
   display: block;
   height: 100%;
   width: 8px;
   position: fixed;
-  margin-left: -3px;
+  margin-left: -4px;
   z-index: 10;
 }
 
@@ -110,13 +111,6 @@ body {
   display: flex;
   overflow: hidden;
   background-color: inherit;
-}
-
-.Aside iframe {
-  background: white;
-  border-left: 1px solid #80808085;
-  height: 95%;
-  height: calc(100% - 3rem + 1px);
 }
 
 .ToolBar {
@@ -134,8 +128,7 @@ body {
 
 .Aside-Console {
   width: 100%;
-  width: calc(100% - 1px);
-  height: 15rem;
+  height: 13.5rem;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -144,13 +137,31 @@ body {
   background: white;
 }
 
+.Console-Btn {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.Console-Btn::after {
+  content: "";
+  width: 100%;
+  height: 8px;
+  position: fixed;
+  margin-top: -4px;
+  cursor: row-resize;
+  z-index: 9;
+}
+
 .Console-Bar {
-  height: 1.5rem;
+  height: 20px;
   border-bottom: 1px solid #a9a9a9;
   background: #f1f1f1;
   padding: 0 0.5rem;
   color: dimgrey;
   display: flex;
+  position: relative;
+  user-select: none;
 }
 
 .Console-Bar-Btn {
@@ -159,7 +170,8 @@ body {
 }
 
 .Console-Output {
-  height: 13.5rem;
+  height: 100%;
+  height: calc(100% - 20px);
   overflow: auto;
   padding: 0 0.5rem;
 }

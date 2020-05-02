@@ -23,6 +23,7 @@ import {
   __LS_CUR_TAB__,
   __LS_EDITOR_THEME__,
   __LS_EDITOR_WIDTH__,
+  __LS_EDITOR_CONS_HEIGHT__,
   __VERSION__,
   __LS_BG__,
   __LS_BG_OP__,
@@ -86,6 +87,11 @@ const App = () => {
     const _width = localStorage.getItem(__LS_EDITOR_WIDTH__)
     _theme && setTheme(_theme)
     _width && setEditorSize(Number(_width), editorHeight)
+    // init console height
+    const _consHeight = localStorage.getItem(__LS_EDITOR_CONS_HEIGHT__)
+    if (_consHeight) {
+      aside_console_ref.current.style.height = _consHeight
+    }
 
     // init bg
     const bgImage = localStorage.getItem(__LS_BG__)
@@ -93,8 +99,10 @@ const App = () => {
       document.body.style.backgroundImage = `url(${bgImage})`
     }
     const bgOp = localStorage.getItem(__LS_BG_OP__)
-    if (bgOp) {
+    if (bgOp && bgImage) {
       document.body.style.opacity = String(Number(bgOp) / 100)
+    } else {
+      document.body.style.opacity = '1'
     }
 
     // init current tab
@@ -243,14 +251,13 @@ const App = () => {
 
   const setEditorSize = (width: number, height: number) => {
     sec_ref.current.style.width = width + "px"
-    const asideWidth = docWidth - width
-    aside_ref.current.style.width = asideWidth + "px"
     editor.setSize(width, height)
+    const asideWidth = docWidth - width
     if (diffEditor) {
       diffEditor.setSize(width, height)
+      aside_ref.current.style.width = asideWidth + "px"
     }
     asideSize_ref.current.textContent = `${asideWidth} x ${height}`
-    localStorage.setItem(__LS_EDITOR_WIDTH__, String(width))
   }
 
   const dl_ref = useRef<"a">()
@@ -349,20 +356,6 @@ const App = () => {
     }
   }
 
-  // console btn
-  let console_flag = false
-  const switchConsole = event => {
-    if (console_flag) {
-      aside_console_ref.current.style.transform = "translate(0, 0)"
-      console_flag = false
-      event.target.innerHTML = "[hide]"
-    } else {
-      aside_console_ref.current.style.transform = "translate(0, 90%)"
-      console_flag = true
-      event.target.innerHTML = "[show]"
-    }
-  }
-
   // fixed docWidth
   window.addEventListener("resize", () => {
     docWidth = document.documentElement.clientWidth
@@ -450,22 +443,17 @@ const App = () => {
           ref={el =>
             addDragListener(
               el,
-              e => {
-                setEditorSize(e.clientX, editorHeight)
-              },
+              e => setEditorSize(e.clientX, editorHeight),
               () => {
                 output_ref.current.style.display = "none"
-                aside_console_ref.current.style.display = "none"
                 asideSize_ref.current.style.display = "block"
+                aside_console_ref.current.style.display = "none"
               },
-              () => {
+              e => {
+                asideSize_ref.current.style.display = "none"
                 output_ref.current.style.display = "block"
                 aside_console_ref.current.style.display = "block"
-                asideSize_ref.current.style.display = "none"
-                localStorage.setItem(
-                  __LS_EDITOR_WIDTH__,
-                  sec_ref.current.style.width.replace("px", "")
-                )
+                localStorage.setItem(__LS_EDITOR_WIDTH__, String(e.clientX))
               }
             )
           }
@@ -491,19 +479,38 @@ const App = () => {
           </div>
         </div>
         <iframe ref={output_ref} />
+        <div className="Aside-Size" ref={asideSize_ref} />
         <div ref={aside_console_ref} className="Aside-Console">
           <div className="Console-Bar">
             <div style={{ flexGrow: "1" }}>Console</div>
             <div className="Console-Bar-Btn" onclick={clearConsole}>
               [clear]
             </div>
-            <div className="Console-Bar-Btn" onclick={switchConsole}>
-              [hide]
-            </div>
+            <div
+              className="Console-Btn"
+              ref={el =>
+                addDragListener(
+                  el,
+                  e => {
+                    const consHeight = `calc(100vh - ${e.clientY - 20}px)`
+                    aside_console_ref.current.style.height = consHeight
+                  },
+                  () => {
+                    output_ref.current.style.display = "none"
+                    asideSize_ref.current.style.display = "block"
+                  },
+                  e => {
+                    asideSize_ref.current.style.display = "none"
+                    output_ref.current.style.display = "block"
+                    const consHeight = `calc(100vh - ${e.clientY - 20}px)`
+                    localStorage.setItem(__LS_EDITOR_CONS_HEIGHT__, consHeight)
+                  }
+                )
+              }
+            />
           </div>
           <div ref={console_ref} className="Console-Output" />
         </div>
-        <div className="Aside-Size" ref={asideSize_ref} />
       </aside>
       <a ref={dl_ref} />
     </div>

@@ -21,7 +21,12 @@ export const Settings = ({ close }: { close: Function }) => {
 
     const bgOp = bg_op_ref.current.value
     localStorage.setItem(__LS_BG_OP__, bgOp)
-    document.body.style.opacity = String(Number(bgOp) / 100)
+
+    if (bgImage) {
+      document.body.style.opacity = String(Number(bgOp) / 100)
+    } else {
+      document.body.style.opacity = "1"
+    }
 
     const arg = arg_ref.current.value
     localStorage.setItem(__LS_ARG__, arg)
