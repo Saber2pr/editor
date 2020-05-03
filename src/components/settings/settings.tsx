@@ -14,7 +14,11 @@ import { openModel } from "../model/model"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
 
-let isAutoRun: "yes" | "no" = localStorage.getItem(KEYS.__LS_AUTO_RUN__) as any
+const getLSAutoRun = () => {
+  const ls_auto_run = localStorage.getItem(KEYS.__LS_AUTO_RUN__) as "yes" | "no"
+  return ls_auto_run === null ? "yes" : ls_auto_run
+}
+let isAutoRun: "yes" | "no" = getLSAutoRun()
 export const shouldAutoRun = () => isAutoRun === "yes"
 
 export const Settings = ({ close }: { close: Function }) => {
@@ -91,11 +95,11 @@ export const Settings = ({ close }: { close: Function }) => {
             <th>auto-run</th>
             <td>
               <input
-                defaultChecked={
-                  localStorage.getItem(KEYS.__LS_AUTO_RUN__) === "yes"
-                }
                 type="checkbox"
-                ref={auto_run_ref}
+                ref={el => {
+                  auto_run_ref.current = el
+                  el.checked = getLSAutoRun() === "yes"
+                }}
               />
             </td>
           </tr>
