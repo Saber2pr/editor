@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-03 15:23:06
+ * @Last Modified time: 2020-05-03 22:15:09
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -12,12 +12,13 @@ import {
   EditorAPI,
   DiffEditorAPI,
   createDiffEditor,
-  compileTS
+  compileTS,
+  addExtraLib
 } from "./createEditor"
 import "./app.css"
 import { KEYS } from "./constants"
 import { openModel } from "./components/model/model"
-import { Settings } from "./components/settings/settings"
+import { Settings, shouldAutoRun } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples, loadScript } from "./samples"
 import { makeSandCode } from "./makeSandCode"
@@ -107,6 +108,8 @@ const App = () => {
         FILES.javascript = name
         editor.setValue("javascript", content)
         activeBtn(3)
+      } else if (name.endsWith(".d.ts")) {
+        addExtraLib(content)
       } else if (name.endsWith(".tsx") || name.endsWith(".ts")) {
         FILES.typescript = name
         editor.setValue("typescript", content)
@@ -416,11 +419,15 @@ const App = () => {
             Download
           </button>
         </nav>
-        <main className="Editor" ref={ref} onkeyup={() => debounce(run)} />
+        <main
+          className="Editor"
+          ref={ref}
+          onkeyup={() => shouldAutoRun() && debounce(run)}
+        />
         <div
           className="DiffEditor"
           ref={diff_ref}
-          onkeyup={() => debounce(saveModified)}
+          onkeyup={() => shouldAutoRun() && debounce(saveModified)}
         />
       </section>
       <aside ref={aside_ref} className="Aside">

@@ -32,9 +32,14 @@ export const addDragListener = (
 }
 
 export const readFile = (file: File) =>
-  new Promise<string>((resolve, reject) => {
+  new Promise<FileInfo>((resolve, reject) => {
     const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
+    reader.onload = () =>
+      resolve({
+        content: String(reader.result),
+        name: file.name,
+        type: file.type
+      })
     reader.onerror = () => reject(reader.result)
     reader.readAsText(file)
   })
@@ -45,15 +50,17 @@ type FileInfo = {
   content: string
 }
 
-export const addUploadListener = (callback: (res: FileInfo) => void) => {
+export const addUploadListener = (
+  callback: (res: FileInfo) => void,
+) => {
   document.addEventListener("dragover", e => e.preventDefault())
-  document.addEventListener("drop", event => {
+  document.addEventListener("drop", async event => {
     event.preventDefault()
     const dt = event.dataTransfer
-    const file = dt.files[0]
-    readFile(file).then(content =>
-      callback({ name: file.name, type: file.type, content })
-    )
+    const files = dt.files
+    for await (const result of Array.from(files).map(readFile)) {
+      callback(result)
+    }
   })
 }
 

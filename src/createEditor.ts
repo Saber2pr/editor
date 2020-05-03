@@ -176,21 +176,32 @@ export const compileTS = async uri => {
   return files.text
 }
 
-export const createTSXModel = (content: string) => {
-  const CompilerOptions = monaco.languages.typescript.typescriptDefaults.getCompilerOptions()
-  monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+const typescriptDefaults = monaco.languages.typescript.typescriptDefaults
+export const addExtraLib = (...args) => typescriptDefaults.addExtraLib(...args)
+
+const defaultCompilerOptions = {
+  jsx: monaco.languages.typescript.JsxEmit["React"],
+  target: monaco.languages.typescript.ScriptTarget["ES5"],
+  module: monaco.languages.typescript.ModuleKind["AMD"],
+  allowSyntheticDefaultImports: true,
+  esModuleInterop: true,
+  allowJs: true,
+  experimentalDecorators: true,
+  emitDecoratorMetadata: true,
+  downlevelIteration: true,
+  removeComments: true
+}
+
+const updateCompilerOptions = options => {
+  const CompilerOptions = typescriptDefaults.getCompilerOptions()
+  typescriptDefaults.setCompilerOptions({
     ...CompilerOptions,
-    jsx: monaco.languages.typescript.JsxEmit["React"],
-    target: monaco.languages.typescript.ScriptTarget["ES5"],
-    module: monaco.languages.typescript.ModuleKind["AMD"],
-    allowSyntheticDefaultImports: true,
-    esModuleInterop: true,
-    allowJs: true,
-    experimentalDecorators: true,
-    emitDecoratorMetadata: true,
-    downlevelIteration: true,
-    removeComments: true
+    ...options
   })
+}
+
+export const createTSXModel = (content: string) => {
+  updateCompilerOptions(defaultCompilerOptions)
   return monaco.editor.createModel(
     content,
     "typescript",
@@ -199,8 +210,11 @@ export const createTSXModel = (content: string) => {
 }
 
 const ExtraLibs = {}
-export const addModuleDeclaration = async (url: string, moduleName: string) => {
-  const key = moduleName.concat(url)
+export const addModuleDeclaration = async (
+  url: string,
+  moduleName?: string
+) => {
+  const key = url
   if (key in ExtraLibs) {
     return ExtraLibs[key]
   }
@@ -209,19 +223,16 @@ export const addModuleDeclaration = async (url: string, moduleName: string) => {
 
   const paths = getReferencePaths(text)
   await Promise.all(
-    paths.map(path => {
-      const referPath = resolvePath(url, path)
-      return addModuleDeclaration(referPath, path)
-    })
+    paths.map(path => addModuleDeclaration(resolvePath(url, path)))
   )
 
-  const isModule = url.endsWith("index.d.ts")
-  const wrapped = isModule ? `declare module "${moduleName}" { ${text} }` : text
-  const lib = monaco.languages.typescript.typescriptDefaults.addExtraLib(
-    wrapped,
-    moduleName
-  )
+  const wrapped = moduleName
+    ? `declare module "${moduleName}" { ${text} }`
+    : text
+  const lib = addExtraLib(wrapped, moduleName)
   ExtraLibs[key] = lib
 }
+
 // export api for scripts.
 window["api_addModuleDeclaration"] = addModuleDeclaration
+window["api_updateCompilerOptions"] = updateCompilerOptions

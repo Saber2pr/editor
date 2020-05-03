@@ -57,3 +57,11 @@ function api_makeSandCode(mode?: "dev" | "pro"): Promise<string>
 ```
 
 `mode` {default}-"dev"
+
+### 6. api_updateCompilerOptions
+
+update tsconfig
+
+```ts
+function api_updateCompilerOptions(options): void
+```

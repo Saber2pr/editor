@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 
-import Axios from 'axios'
-// console.log(Axios.get)
+import axios from 'axios'
+// console.log(axios.get)
 
 interface App {
   github: string
@@ -32,4 +32,5 @@ const App = ({ github }: App) => {
   </div>
 }
 
-ReactDOM.render(<App github="https://github.com/Saber2pr/editor" />, document.getElementById('test'))
+ReactDOM.render(<App github="https://github.com/Saber2pr/editor" />,
+  document.getElementById('test'))

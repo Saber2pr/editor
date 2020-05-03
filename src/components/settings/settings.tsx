@@ -4,16 +4,24 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-03 15:24:30
  */
+declare const LOADING: { init(): void; destroy(): void }
+
 import TSX, { useRef } from "@saber2pr/tsx"
 import { KEYS } from "../../constants"
 import "./settings.css"
+import { addModuleDeclaration } from "../../createEditor"
+import { openModel } from "../model/model"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
+
+let isAutoRun: "yes" | "no" = localStorage.getItem(KEYS.__LS_AUTO_RUN__) as any
+export const shouldAutoRun = () => isAutoRun === "yes"
 
 export const Settings = ({ close }: { close: Function }) => {
   const bg_ref = useRef<"input">()
   const bg_op_ref = useRef<"input">()
   const arg_ref = useRef<"textarea">()
+  const auto_run_ref = useRef<"input">()
   const save = () => {
     const bgImage = bg_ref.current.value
     localStorage.setItem(KEYS.__LS_BG__, bgImage)
@@ -30,6 +38,10 @@ export const Settings = ({ close }: { close: Function }) => {
 
     const arg = arg_ref.current.value
     localStorage.setItem(KEYS.__LS_ARG__, arg)
+
+    const autoRun = auto_run_ref.current.checked ? "yes" : "no"
+    isAutoRun = autoRun
+    localStorage.setItem(KEYS.__LS_AUTO_RUN__, autoRun)
 
     close()
   }
@@ -75,6 +87,18 @@ export const Settings = ({ close }: { close: Function }) => {
               />
             </td>
           </tr>
+          <tr>
+            <th>auto-run</th>
+            <td>
+              <input
+                defaultChecked={
+                  localStorage.getItem(KEYS.__LS_AUTO_RUN__) === "yes"
+                }
+                type="checkbox"
+                ref={auto_run_ref}
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
       <br />
@@ -106,6 +130,58 @@ export const Settings = ({ close }: { close: Function }) => {
           onclick={() => window.open(DOC_script, "_blank")}
         >
           open-api
+        </button>
+        <button className="ButtonHigh" onclick={() => openModel(ModuleManager)}>
+          lib
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export const ModuleManager = ({ close }) => {
+  const name_ref = useRef<"input">()
+  const url_ref = useRef<"input">()
+
+  const startLoad = async () => {
+    const url = url_ref.current.value
+    const moduleName = name_ref.current.value
+    if (url) {
+      LOADING.init()
+      await addModuleDeclaration(url, moduleName)
+      LOADING.destroy()
+    }
+    close()
+  }
+
+  return (
+    <div className="Settings">
+      <div>Module Manager</div>
+      <p style={{ color: "grey", paddingLeft: "1rem", opacity: "0.5" }}>
+        load d.ts file.
+      </p>
+      <br />
+      <table>
+        <tr>
+          <th>Module Name:</th>
+          <td>
+            <input type="url" ref={name_ref} />
+          </td>
+        </tr>
+        <tr>
+          <th title="d.ts file's url.">DTS URL:</th>
+          <td>
+            <input type="url" ref={url_ref} />
+          </td>
+        </tr>
+      </table>
+      <br />
+      <div>
+        <button className="ButtonHigh" onclick={startLoad}>
+          load
+        </button>
+        <button className="ButtonHigh" onclick={close}>
+          cancel
         </button>
       </div>
     </div>

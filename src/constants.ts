@@ -2,13 +2,14 @@
  * @Author: saber2pr
  * @Date: 2020-04-12 22:38:48
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-03 15:22:33
+ * @Last Modified time: 2020-05-03 22:15:26
  */
 export namespace KEYS {
   // version
-  export const __VERSION__ = "0.2.7"
+  export const __VERSION__ = "0.2.8"
 
   // KEYS
+  export const __LS_AUTO_RUN__ = "__EDITOR_AUTO_RUN__"
   export const __LS_ARG__ = "__EDITOR_ARG__"
   export const __LS_JS__ = "__EDITOR_JS__"
   export const __LS_TS__ = "__EDITOR_TS__"

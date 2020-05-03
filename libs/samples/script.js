@@ -1,10 +1,3 @@
-// declarations config
-top.api_addModuleDeclaration('https://www.unpkg.com/@types/react/index.d.ts', 'react')
-top.api_addModuleDeclaration('https://www.unpkg.com/@types/react-dom/index.d.ts', 'react-dom')
-top.api_addModuleDeclaration('https://www.unpkg.com/csstype/index.d.ts', 'csstype')
-top.api_addModuleDeclaration('https://www.unpkg.com/@types/prop-types/index.d.ts', 'prop-types')
-top.api_addModuleDeclaration('https://unpkg.com/axios/index.d.ts', 'axios')
-
 // themes config
 const THEME_NAME = '__EDITOR_EDITOR_THEME__'
 const themer = top.document.querySelector('.ToolBar select')
