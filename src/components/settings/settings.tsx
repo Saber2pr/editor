@@ -2,10 +2,10 @@
  * @Author: saber2pr
  * @Date: 2020-04-12 15:39:32
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-23 13:23:34
+ * @Last Modified time: 2020-05-03 15:24:30
  */
 import TSX, { useRef } from "@saber2pr/tsx"
-import { __LS_BG__, __LS_BG_OP__, __LS_ARG__ } from "../../constants"
+import { KEYS } from "../../constants"
 import "./settings.css"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
@@ -16,11 +16,11 @@ export const Settings = ({ close }: { close: Function }) => {
   const arg_ref = useRef<"textarea">()
   const save = () => {
     const bgImage = bg_ref.current.value
-    localStorage.setItem(__LS_BG__, bgImage)
+    localStorage.setItem(KEYS.__LS_BG__, bgImage)
     document.body.style.backgroundImage = `url(${bgImage})`
 
     const bgOp = bg_op_ref.current.value
-    localStorage.setItem(__LS_BG_OP__, bgOp)
+    localStorage.setItem(KEYS.__LS_BG_OP__, bgOp)
 
     if (bgImage) {
       document.body.style.opacity = String(Number(bgOp) / 100)
@@ -29,7 +29,7 @@ export const Settings = ({ close }: { close: Function }) => {
     }
 
     const arg = arg_ref.current.value
-    localStorage.setItem(__LS_ARG__, arg)
+    localStorage.setItem(KEYS.__LS_ARG__, arg)
 
     close()
   }
@@ -44,7 +44,7 @@ export const Settings = ({ close }: { close: Function }) => {
               <input
                 type="url"
                 ref={bg_ref}
-                defaultValue={localStorage.getItem(__LS_BG__) || ""}
+                defaultValue={localStorage.getItem(KEYS.__LS_BG__) || ""}
                 placeholder="input image url..."
               />
             </td>
@@ -57,7 +57,7 @@ export const Settings = ({ close }: { close: Function }) => {
                 min="40"
                 max="100"
                 ref={bg_op_ref}
-                defaultValue={localStorage.getItem(__LS_BG_OP__) || "75"}
+                defaultValue={localStorage.getItem(KEYS.__LS_BG_OP__) || "75"}
                 oninput={() => {
                   const bgOp = bg_op_ref.current.value
                   document.body.style.opacity = String(Number(bgOp) / 100)
@@ -69,7 +69,7 @@ export const Settings = ({ close }: { close: Function }) => {
             <th title="execute when editor running">script</th>
             <td>
               <textarea
-                defaultValue={localStorage.getItem(__LS_ARG__) || ""}
+                defaultValue={localStorage.getItem(KEYS.__LS_ARG__) || ""}
                 ref={arg_ref}
                 placeholder="input scripts..."
               />

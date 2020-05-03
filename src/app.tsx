@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-04-30 14:44:49
+ * @Last Modified time: 2020-05-03 15:23:06
  */
 declare const LOADING: { init(): void; destroy(): void }
 
@@ -15,23 +15,7 @@ import {
   compileTS
 } from "./createEditor"
 import "./app.css"
-import {
-  __LS_JS__,
-  __LS_TS__,
-  __LS_CSS__,
-  __LS_HTML__,
-  __LS_CUR_TAB__,
-  __LS_EDITOR_THEME__,
-  __LS_EDITOR_WIDTH__,
-  __LS_EDITOR_CONS_HEIGHT__,
-  __VERSION__,
-  __LS_BG__,
-  __LS_BG_OP__,
-  __LS_ARG__,
-  __LS_JSON__,
-  __MESSAGE_CONSOLE__,
-  __MESSAGE_CONSOLE_ERROR__
-} from "./constants"
+import { KEYS } from "./constants"
 import { openModel } from "./components/model/model"
 import { Settings } from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
@@ -56,7 +40,7 @@ const App = () => {
   const diff_ref = useRef<"div">()
   const sec_ref = useRef<"section">()
   const output_ref = useRef<"iframe">()
-  const _theme = localStorage.getItem(__LS_EDITOR_THEME__) as any
+  const _theme = localStorage.getItem(KEYS.__LS_EDITOR_THEME__) as any
 
   const toolBar_ref = useRef<"nav">()
   let toolBtns: HTMLButtonElement[]
@@ -67,11 +51,11 @@ const App = () => {
 
   useEffect(async () => {
     let defaults = {
-      typescript: localStorage.getItem(__LS_TS__),
-      javascript: localStorage.getItem(__LS_JS__),
-      css: localStorage.getItem(__LS_CSS__),
-      html: localStorage.getItem(__LS_HTML__),
-      json: localStorage.getItem(__LS_JSON__)
+      typescript: localStorage.getItem(KEYS.__LS_TS__),
+      javascript: localStorage.getItem(KEYS.__LS_JS__),
+      css: localStorage.getItem(KEYS.__LS_CSS__),
+      html: localStorage.getItem(KEYS.__LS_HTML__),
+      json: localStorage.getItem(KEYS.__LS_JSON__)
     }
     if (Object.keys(defaults).every(k => !defaults[k])) {
       defaults = await loadSamples()
@@ -84,21 +68,21 @@ const App = () => {
     toolBtns = Array.from(toolBar_ref.current.children) as any
 
     // init width, theme
-    const _width = localStorage.getItem(__LS_EDITOR_WIDTH__)
+    const _width = localStorage.getItem(KEYS.__LS_EDITOR_WIDTH__)
     _theme && setTheme(_theme)
     _width && setEditorSize(Number(_width), editorHeight)
     // init console height
-    const _consHeight = localStorage.getItem(__LS_EDITOR_CONS_HEIGHT__)
+    const _consHeight = localStorage.getItem(KEYS.__LS_EDITOR_CONS_HEIGHT__)
     if (_consHeight) {
       aside_console_ref.current.style.height = _consHeight
     }
 
     // init bg
-    const bgImage = localStorage.getItem(__LS_BG__)
+    const bgImage = localStorage.getItem(KEYS.__LS_BG__)
     if (bgImage) {
       document.body.style.backgroundImage = `url(${bgImage})`
     }
-    const bgOp = localStorage.getItem(__LS_BG_OP__)
+    const bgOp = localStorage.getItem(KEYS.__LS_BG_OP__)
     if (bgOp && bgImage) {
       document.body.style.opacity = String(Number(bgOp) / 100)
     } else {
@@ -106,7 +90,7 @@ const App = () => {
     }
 
     // init current tab
-    const tabIndex = Number(localStorage.getItem(__LS_CUR_TAB__) || "4")
+    const tabIndex = Number(localStorage.getItem(KEYS.__LS_CUR_TAB__) || "4")
     activeBtn(tabIndex)
 
     // listeners
@@ -152,10 +136,10 @@ const App = () => {
       makeSandCode(editor, mode)
 
     // execute script
-    let script = localStorage.getItem(__LS_ARG__)
+    let script = localStorage.getItem(KEYS.__LS_ARG__)
     if (!script) {
       script = await loadScript()
-      localStorage.setItem(__LS_ARG__, script)
+      localStorage.setItem(KEYS.__LS_ARG__, script)
     }
 
     // init finished
@@ -188,11 +172,11 @@ const App = () => {
   }
   window.addEventListener("message", event => {
     const data = event.data
-    if (data.method === __MESSAGE_CONSOLE__) {
+    if (data.method === KEYS.__MESSAGE_CONSOLE__) {
       consoleContent += `<pre style="${console_style}">${data.value}</pre>`
       pushConsole()
     }
-    if (data.method === __MESSAGE_CONSOLE_ERROR__) {
+    if (data.method === KEYS.__MESSAGE_CONSOLE_ERROR__) {
       consoleContent += `<pre style="${console_style}color: red;">${
         data.value
       }</pre>`
@@ -224,7 +208,7 @@ const App = () => {
     if (type) {
       editor.changeModel(type)
       FILES.current = type
-      localStorage.setItem(__LS_CUR_TAB__, String(target))
+      localStorage.setItem(KEYS.__LS_CUR_TAB__, String(target))
     }
   }
 
@@ -241,7 +225,7 @@ const App = () => {
 
   const setTheme = (theme: "vs" | "vs-dark" | "hc-black") => {
     editor.setTheme(theme)
-    localStorage.setItem(__LS_EDITOR_THEME__, theme)
+    localStorage.setItem(KEYS.__LS_EDITOR_THEME__, theme)
     if (theme === "vs") {
       document.body.style.backgroundColor = "white"
     } else {
@@ -455,7 +439,10 @@ const App = () => {
                 asideSize_ref.current.style.display = "none"
                 output_ref.current.style.display = "block"
                 aside_console_ref.current.style.display = "block"
-                localStorage.setItem(__LS_EDITOR_WIDTH__, String(e.clientX))
+                localStorage.setItem(
+                  KEYS.__LS_EDITOR_WIDTH__,
+                  String(e.clientX)
+                )
               }
             )
           }
@@ -477,7 +464,7 @@ const App = () => {
               padding: "0 0.5rem"
             }}
           >
-            v{__VERSION__} by saber2pr
+            v{KEYS.__VERSION__} by saber2pr
           </div>
         </div>
         <iframe ref={output_ref} />
@@ -485,8 +472,7 @@ const App = () => {
         <div ref={aside_console_ref} className="Aside-Console">
           <div className="Console-Bar">
             <div style={{ flexGrow: "1" }}>Console</div>
-            <div className="iconfont icon-clear" onclick={clearConsole}>
-            </div>
+            <div className="iconfont icon-clear" onclick={clearConsole} />
             <div
               className="Console-Btn"
               ref={el =>
@@ -509,7 +495,10 @@ const App = () => {
                     let clientY = e.clientY
                     clientY = clientY > 21 ? clientY : 21
                     const consHeight = `calc(100vh - ${clientY}px + 1.5rem)`
-                    localStorage.setItem(__LS_EDITOR_CONS_HEIGHT__, consHeight)
+                    localStorage.setItem(
+                      KEYS.__LS_EDITOR_CONS_HEIGHT__,
+                      consHeight
+                    )
                   }
                 )
               }
