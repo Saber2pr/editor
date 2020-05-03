@@ -16,21 +16,19 @@ export const addDragListener = (
   onDragEnd?: (event: MouseEvent) => void
 ) => {
   let lock = false
-  target.onmousedown = event => {
-    lock = true
-    onDragStart && onDragStart(event)
-
-    document.onmousemove = event => {
-      if (lock) {
-        callback(event)
-      }
-    }
-  }
-  target.onmouseup = event => {
+  const cancel = (event: MouseEvent) => {
     lock = false
     onDragEnd && onDragEnd(event)
     document.onmousemove = null
+    document.onmouseup = null
   }
+  target.onmousedown = event => {
+    lock = true
+    onDragStart && onDragStart(event)
+    document.onmousemove = event => lock && callback(event)
+    document.onmouseup = cancel
+  }
+  target.onmouseup = cancel
 }
 
 export const readFile = (file: File) =>

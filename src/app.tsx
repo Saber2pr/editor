@@ -102,7 +102,7 @@ const App = () => {
     if (bgOp && bgImage) {
       document.body.style.opacity = String(Number(bgOp) / 100)
     } else {
-      document.body.style.opacity = '1'
+      document.body.style.opacity = "1"
     }
 
     // init current tab
@@ -357,9 +357,11 @@ const App = () => {
   }
 
   // fixed docWidth
-  window.addEventListener("resize", () => {
-    docWidth = document.documentElement.clientWidth
-  })
+  window.addEventListener("resize", () =>
+    debounce(() => {
+      docWidth = document.documentElement.clientWidth
+    })
+  )
 
   return (
     <div className="App">
@@ -367,7 +369,7 @@ const App = () => {
         <nav ref={toolBar_ref} className="ToolBar">
           <div
             style={{
-              borderBottom: "1px solid #ababab",
+              borderBottom: "1px solid #80808085",
               width: "0.5rem"
             }}
           />
@@ -396,7 +398,7 @@ const App = () => {
           <div
             style={{
               flexGrow: "1",
-              borderBottom: "1px solid #ababab"
+              borderBottom: "1px solid #80808085"
             }}
           />
           <button className="ButtonHigh" onclick={switchDiff}>
@@ -483,8 +485,7 @@ const App = () => {
         <div ref={aside_console_ref} className="Aside-Console">
           <div className="Console-Bar">
             <div style={{ flexGrow: "1" }}>Console</div>
-            <div className="Console-Bar-Btn" onclick={clearConsole}>
-              [clear]
+            <div className="iconfont icon-clear" onclick={clearConsole}>
             </div>
             <div
               className="Console-Btn"
@@ -492,8 +493,11 @@ const App = () => {
                 addDragListener(
                   el,
                   e => {
-                    const consHeight = `calc(100vh - ${e.clientY - 20}px)`
-                    aside_console_ref.current.style.height = consHeight
+                    const clientY = e.clientY
+                    if (clientY >= 21) {
+                      const consHeight = `calc(100vh - ${e.clientY}px + 1.5rem)`
+                      aside_console_ref.current.style.height = consHeight
+                    }
                   },
                   () => {
                     output_ref.current.style.display = "none"
@@ -502,7 +506,9 @@ const App = () => {
                   e => {
                     asideSize_ref.current.style.display = "none"
                     output_ref.current.style.display = "block"
-                    const consHeight = `calc(100vh - ${e.clientY - 20}px)`
+                    let clientY = e.clientY
+                    clientY = clientY > 21 ? clientY : 21
+                    const consHeight = `calc(100vh - ${clientY}px + 1.5rem)`
                     localStorage.setItem(__LS_EDITOR_CONS_HEIGHT__, consHeight)
                   }
                 )
