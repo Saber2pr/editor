@@ -18,7 +18,11 @@ import {
 import "./app.css"
 import { KEYS } from "./constants"
 import { openModel } from "./components/model/model"
-import { Settings, shouldAutoRun } from "./components/settings/settings"
+import {
+  Settings,
+  shouldAutoRun,
+  ModuleManager
+} from "./components/settings/settings"
 import { debounce, addDragListener, addUploadListener } from "./utils"
 import { loadSamples, loadScript } from "./samples"
 import { makeSandCode } from "./makeSandCode"
@@ -388,6 +392,12 @@ const App = () => {
               borderBottom: "1px solid #80808085"
             }}
           />
+          <button
+            className="ButtonHigh"
+            onclick={() => openModel(ModuleManager)}
+          >
+            Lib
+          </button>
           <button className="ButtonHigh" onclick={switchDiff}>
             Diff
           </button>

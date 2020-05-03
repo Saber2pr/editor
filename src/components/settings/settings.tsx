@@ -10,7 +10,6 @@ import TSX, { useRef } from "@saber2pr/tsx"
 import { KEYS } from "../../constants"
 import "./settings.css"
 import { addModuleDeclaration, addExtraLib } from "../../createEditor"
-import { openModel } from "../model/model"
 import { readFile } from "../../utils"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
@@ -135,9 +134,6 @@ export const Settings = ({ close }: { close: Function }) => {
           onclick={() => window.open(DOC_script, "_blank")}
         >
           open-api
-        </button>
-        <button className="ButtonHigh" onclick={() => openModel(ModuleManager)}>
-          lib
         </button>
       </div>
     </div>
