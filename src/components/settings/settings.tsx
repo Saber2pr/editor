@@ -9,8 +9,9 @@ declare const LOADING: { init(): void; destroy(): void }
 import TSX, { useRef } from "@saber2pr/tsx"
 import { KEYS } from "../../constants"
 import "./settings.css"
-import { addModuleDeclaration } from "../../createEditor"
+import { addModuleDeclaration, addExtraLib } from "../../createEditor"
 import { openModel } from "../model/model"
+import { readFile } from "../../utils"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
 
@@ -176,6 +177,23 @@ export const ModuleManager = ({ close }) => {
           <th title="d.ts file's url.">DTS URL:</th>
           <td>
             <input type="url" ref={url_ref} />
+          </td>
+        </tr>
+        <tr>
+          <th>From File:</th>
+          <td>
+            <input
+              accept=".d.ts"
+              type="file"
+              oninput={async e => {
+                const files = e.target["files"]
+                for await (const { content } of Array.from(files).map(
+                  readFile
+                )) {
+                  addExtraLib(content)
+                }
+              }}
+            />
           </td>
         </tr>
       </table>
