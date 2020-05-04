@@ -1,6 +1,6 @@
-# @saber2pr/editor
+# tsx-editor
 
-> a web editor for react, powered by monaco-editor.
+> a web editor for tsx page writing.
 
 # Start
 
