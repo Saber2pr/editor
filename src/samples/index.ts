@@ -7,11 +7,11 @@ interface Defaults {
 }
 
 const samples = [
-  "/libs/samples/main.tsx",
-  "/libs/samples/main.js",
-  "/libs/samples/style.css",
-  "/libs/samples/index.html",
-  "/libs/samples/data.json"
+  "/samples/main.tsx",
+  "/samples/main.js",
+  "/samples/style.css",
+  "/samples/index.html",
+  "/samples/data.json"
 ]
 
 export const loadSamples = async (): Promise<Defaults> => {
@@ -29,7 +29,7 @@ export const loadSamples = async (): Promise<Defaults> => {
 }
 
 export const settings = {
-  script: "/libs/samples/script.js"
+  script: "/samples/script.js"
 }
 
 export const loadScript = () => fetch(settings.script).then(res => res.text())

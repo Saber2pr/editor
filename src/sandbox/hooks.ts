@@ -4,7 +4,7 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-03 15:23:32
  */
-import { KEYS } from "./constants"
+import { KEYS } from "../constants"
 
 export const ConsoleHook = `<script data-type="${KEYS.__SANDBOX_HOOK__}">
 ;(() => {

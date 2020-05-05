@@ -2,19 +2,26 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const path = require("path")
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin")
+const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin")
 
 const extract = new ExtractTextPlugin("style.min.css")
 
 const { WebpackConfig, templateContent } = require("@saber2pr/webpack-configer")
 
 module.exports = WebpackConfig({
-  entry: "./src/app.tsx",
+  entry: {
+    shouldPC: "./src/external/shouldPC.ts",
+    LOADING: "./src/external/loading.ts",
+    editor: "./src/app.tsx"
+  },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx"]
   },
   output: {
-    filename: "editor.min.js",
-    path: path.join(__dirname, "build")
+    filename: "[name].min.js",
+    path: path.join(__dirname, "build"),
+    library: "[name]",
+    libraryTarget: "global"
   },
   module: {
     rules: [
@@ -42,11 +49,12 @@ module.exports = WebpackConfig({
   plugins: [
     new HtmlWebpackPlugin({
       templateContent: templateContent("Editor", {
-        injectHead:
-          '<script src="/libs/loading.min.js"></script><script async src="/libs/shouldPCBrowser.min.js"></script>',
-        injectBody:
-          '<div id="root"></div></div><script>LOADING.init();</script>'
+        injectHead: `<meta name="viewport" content="maximum-scale=1.0, user-scalable=0">`,
+        injectBody: '<div id="root"></div>'
       })
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      async: ["shouldPC"]
     }),
     extract,
     new MonacoWebpackPlugin()

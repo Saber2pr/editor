@@ -1,1 +1,1 @@
-export * from "./createEditor"
+export * from "./core"

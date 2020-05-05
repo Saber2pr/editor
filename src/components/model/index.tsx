@@ -5,7 +5,7 @@
  * @Last Modified time: 2020-04-12 15:51:53
  */
 import { render } from "@saber2pr/tsx"
-import "./model.css"
+import "./style.css"
 
 type ModelAPI = { close: Function }
 

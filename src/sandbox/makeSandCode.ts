@@ -2,14 +2,17 @@
  * @Author: saber2pr
  * @Date: 2020-04-24 13:35:03
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-03 15:24:09
+ * @Last Modified time: 2020-05-05 20:53:56
  */
-import { KEYS } from "./constants"
-import { compileTS } from "./createEditor"
-import { enClosure } from "./utils"
+import { KEYS } from "../constants"
+import { enClosure } from "../utils"
 import { ConsoleHook } from "./hooks"
+import { compileTS, EditorAPI } from "../core"
 
-export const makeSandCode = async (editor, mode: "dev" | "pro" = "dev") => {
+export const makeSandCode = async (
+  editor: EditorAPI,
+  mode: "dev" | "pro" = "dev"
+) => {
   const js = editor.getValue("javascript")
   const html = editor.getValue("html")
   const css = editor.getValue("css")

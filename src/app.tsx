@@ -2,31 +2,31 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-03 22:15:09
+ * @Last Modified time: 2020-05-05 21:18:04
  */
 declare const LOADING: { init(): void; destroy(): void }
 
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
-import {
-  createEditor,
-  EditorAPI,
-  DiffEditorAPI,
-  createDiffEditor,
-  compileTS,
-  addExtraLib
-} from "./createEditor"
 import "./app.css"
 import { KEYS } from "./constants"
-import { openModel } from "./components/model/model"
+import { openModel, Settings, shouldAutoRun, ModuleManager } from "./components"
 import {
-  Settings,
-  shouldAutoRun,
-  ModuleManager
-} from "./components/settings/settings"
-import { debounce, addDragListener, addUploadListener } from "./utils"
+  debounce,
+  addDragListener,
+  addUploadListener,
+  initKeyBoard
+} from "./utils"
 import { loadSamples, loadScript } from "./samples"
-import { makeSandCode } from "./makeSandCode"
-import { initKeyBoard } from "./keyboard"
+import { makeSandCode } from "./sandbox"
+import {
+  monaco,
+  addExtraLib,
+  compileTS,
+  DiffEditorAPI,
+  createDiffEditor,
+  createEditor,
+  EditorAPI
+} from "./core"
 
 const FILES = {
   current: "typescript",
@@ -231,7 +231,7 @@ const App = () => {
   const asideSize_ref = useRef<"div">()
 
   const setTheme = (theme: "vs" | "vs-dark" | "hc-black") => {
-    editor.setTheme(theme)
+    monaco.editor.setTheme(theme)
     localStorage.setItem(KEYS.__LS_EDITOR_THEME__, theme)
     if (theme === "vs") {
       document.body.style.backgroundColor = "white"

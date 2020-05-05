@@ -2,15 +2,15 @@
  * @Author: saber2pr
  * @Date: 2020-04-12 15:39:32
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-03 15:24:30
+ * @Last Modified time: 2020-05-05 20:54:19
  */
 declare const LOADING: { init(): void; destroy(): void }
 
 import TSX, { useRef } from "@saber2pr/tsx"
 import { KEYS } from "../../constants"
-import "./settings.css"
-import { addModuleDeclaration, addExtraLib } from "../../createEditor"
+import "./style.css"
 import { readFile } from "../../utils"
+import { addModuleDeclaration, addExtraLib } from "../../core"
 
 const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
 
