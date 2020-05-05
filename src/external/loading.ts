@@ -1,8 +1,8 @@
 /*
- * @Author: saber2pr 
- * @Date: 2020-05-05 20:16:04 
- * @Last Modified by:   saber2pr 
- * @Last Modified time: 2020-05-05 20:16:04 
+ * @Author: saber2pr
+ * @Date: 2020-05-05 20:16:04
+ * @Last Modified by: saber2pr
+ * @Last Modified time: 2020-05-05 22:28:39
  */
 let LoadingStyle = `
 .Loading {
@@ -127,3 +127,6 @@ export function destroy() {
     inited = false
   }
 }
+
+// init loading onload.
+init()
