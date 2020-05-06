@@ -12,8 +12,6 @@ import "./style.css"
 import { readFile } from "../../utils"
 import { addModuleDeclaration, addExtraLib } from "../../core"
 
-const DOC_script = "//github.com/Saber2pr/editor/blob/master/doc/script.md"
-
 const getLSAutoRun = () => {
   const ls_auto_run = localStorage.getItem(KEYS.__LS_AUTO_RUN__) as "yes" | "no"
   return ls_auto_run === null ? "yes" : ls_auto_run
@@ -128,12 +126,6 @@ export const Settings = ({ close }: { close: Function }) => {
           }}
         >
           reset
-        </button>
-        <button
-          className="ButtonHigh"
-          onclick={() => window.open(DOC_script, "_blank")}
-        >
-          open-api
         </button>
       </div>
     </div>
