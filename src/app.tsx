@@ -41,18 +41,18 @@ const App = () => {
   let editor: EditorAPI
   let docWidth = document.documentElement.clientWidth
   let editorHeight = document.documentElement.clientHeight - 27
-  const ref = useRef<"main">()
-  const diff_ref = useRef<"div">()
-  const sec_ref = useRef<"section">()
-  const output_ref = useRef<"iframe">()
+  const ref = useRef<HTMLDivElement>()
+  const diff_ref = useRef<HTMLDivElement>()
+  const sec_ref = useRef<HTMLDivElement>()
+  const output_ref = useRef<HTMLIFrameElement>()
   const _theme = localStorage.getItem(KEYS.__LS_EDITOR_THEME__) as any
 
-  const toolBar_ref = useRef<"nav">()
+  const toolBar_ref = useRef<HTMLDivElement>()
   let toolBtns: HTMLButtonElement[]
 
   // refs
-  const console_ref = useRef<"div">()
-  const aside_console_ref = useRef<"div">()
+  const console_ref = useRef<HTMLDivElement>()
+  const aside_console_ref = useRef<HTMLDivElement>()
 
   useEffect(async () => {
     let defaults = {
@@ -227,8 +227,8 @@ const App = () => {
     toolBtns[5]["disabled"] = disabled
   }
 
-  const aside_ref = useRef<"aside">()
-  const asideSize_ref = useRef<"div">()
+  const aside_ref = useRef<HTMLDivElement>()
+  const asideSize_ref = useRef<HTMLDivElement>()
 
   const setTheme = (theme: "vs" | "vs-dark" | "hc-black") => {
     monaco.editor.setTheme(theme)
@@ -251,7 +251,7 @@ const App = () => {
     asideSize_ref.current.textContent = `${asideWidth} x ${height}`
   }
 
-  const dl_ref = useRef<"a">()
+  const dl_ref = useRef<HTMLAnchorElement>()
 
   async function download(type: "file" | "index" = "file") {
     const aLink = dl_ref.current

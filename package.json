@@ -15,7 +15,7 @@
   "author": "saber2pr",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Saber2pr/editor.git"
+    "url": "git+https://github.com/Fronted-TSX-Developer/tsx-editor.git"
   },
   "license": "ISC",
   "keywords": [
@@ -26,7 +26,7 @@
     "monaco-editor": "0.20.0"
   },
   "devDependencies": {
-    "@saber2pr/tsx": "^0.1.4",
+    "@saber2pr/tsx": "^0.1.5",
     "@saber2pr/webpack-configer": "0.0.9",
     "cross-env": "^6.0.0",
     "css-loader": "^2.1.1",

@@ -22,10 +22,10 @@ let isAutoRun: "yes" | "no" = getLSAutoRun()
 export const shouldAutoRun = () => isAutoRun === "yes"
 
 export const Settings = ({ close }: { close: Function }) => {
-  const bg_ref = useRef<"input">()
-  const bg_op_ref = useRef<"input">()
-  const arg_ref = useRef<"textarea">()
-  const auto_run_ref = useRef<"input">()
+  const bg_ref = useRef<HTMLInputElement>()
+  const bg_op_ref = useRef<HTMLInputElement>()
+  const arg_ref = useRef<HTMLTextAreaElement>()
+  const auto_run_ref = useRef<HTMLInputElement>()
   const save = () => {
     const bgImage = bg_ref.current.value
     localStorage.setItem(KEYS.__LS_BG__, bgImage)
@@ -141,8 +141,8 @@ export const Settings = ({ close }: { close: Function }) => {
 }
 
 export const ModuleManager = ({ close }) => {
-  const name_ref = useRef<"input">()
-  const url_ref = useRef<"input">()
+  const name_ref = useRef<HTMLInputElement>()
+  const url_ref = useRef<HTMLInputElement>()
 
   const startLoad = async () => {
     const url = url_ref.current.value
