@@ -2,20 +2,21 @@
  * @Author: saber2pr
  * @Date: 2020-04-22 22:36:26
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-05 21:18:04
+ * @Last Modified time: 2020-05-06 17:57:44
  */
 declare const LOADING: { init(): void; destroy(): void }
 
 import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
 import "./app.css"
 import { KEYS } from "./constants"
-import { openModel, Settings, shouldAutoRun, ModuleManager } from "./components"
 import {
-  debounce,
-  addDragListener,
-  addUploadListener,
-  initKeyBoard
-} from "./utils"
+  openModel,
+  Settings,
+  shouldAutoRun,
+  ModuleManager,
+  Aside
+} from "./components"
+import { debounce, addUploadListener, initKeyBoard } from "./utils"
 import { loadSamples, loadScript } from "./samples"
 import { makeSandCode } from "./sandbox"
 import {
@@ -25,7 +26,9 @@ import {
   DiffEditorAPI,
   createDiffEditor,
   createEditor,
-  EditorAPI
+  EditorAPI,
+  addModuleDeclaration,
+  updateCompilerOptions
 } from "./core"
 
 const FILES = {
@@ -40,7 +43,6 @@ const FILES = {
 const App = () => {
   let editor: EditorAPI
   let docWidth = document.documentElement.clientWidth
-  let editorHeight = document.documentElement.clientHeight - 27
   const ref = useRef<HTMLDivElement>()
   const diff_ref = useRef<HTMLDivElement>()
   const sec_ref = useRef<HTMLDivElement>()
@@ -49,10 +51,6 @@ const App = () => {
 
   const toolBar_ref = useRef<HTMLDivElement>()
   let toolBtns: HTMLButtonElement[]
-
-  // refs
-  const console_ref = useRef<HTMLDivElement>()
-  const aside_console_ref = useRef<HTMLDivElement>()
 
   useEffect(async () => {
     let defaults = {
@@ -68,19 +66,13 @@ const App = () => {
 
     editor = createEditor(ref.current, defaults)
     window["api_editor"] = editor.getInstance()
-    editorHeight = editor.getSize().height
 
     toolBtns = Array.from(toolBar_ref.current.children) as any
 
     // init width, theme
     const _width = localStorage.getItem(KEYS.__LS_EDITOR_WIDTH__)
     _theme && setTheme(_theme)
-    _width && setEditorSize(Number(_width), editorHeight)
-    // init console height
-    const _consHeight = localStorage.getItem(KEYS.__LS_EDITOR_CONS_HEIGHT__)
-    if (_consHeight) {
-      aside_console_ref.current.style.height = _consHeight
-    }
+    _width && setEditorSize(Number(_width))
 
     // init bg
     const bgImage = localStorage.getItem(KEYS.__LS_BG__)
@@ -141,6 +133,16 @@ const App = () => {
     }
     window["api_makeSandCode"] = (mode: "dev" | "pro" = "dev") =>
       makeSandCode(editor, mode)
+    // export api for scripts.
+    window["api_addModuleDeclaration"] = addModuleDeclaration
+    window["api_updateCompilerOptions"] = updateCompilerOptions
+
+    // fixed docWidth
+    window.addEventListener("resize", () =>
+      debounce(() => {
+        docWidth = document.documentElement.clientWidth
+      })
+    )
 
     // execute script
     let script = localStorage.getItem(KEYS.__LS_ARG__)
@@ -162,34 +164,6 @@ const App = () => {
     const code = await makeSandCode(editor, "dev")
     output_ref.current.srcdoc = code
   }
-
-  // console receive
-  let consoleContent = ""
-  const clearConsole = () => {
-    consoleContent = ""
-    console_ref.current.innerHTML = consoleContent
-  }
-  const console_style = `line-height:1.5rem;border-bottom: 1px solid #e8e8e8;`
-  const pushConsole = () => {
-    console_ref.current.innerHTML = consoleContent
-    console_ref.current.scrollTo({
-      top: console_ref.current.scrollHeight,
-      behavior: "smooth"
-    })
-  }
-  window.addEventListener("message", event => {
-    const data = event.data
-    if (data.method === KEYS.__MESSAGE_CONSOLE__) {
-      consoleContent += `<pre style="${console_style}">${data.value}</pre>`
-      pushConsole()
-    }
-    if (data.method === KEYS.__MESSAGE_CONSOLE_ERROR__) {
-      consoleContent += `<pre style="${console_style}color: red;">${
-        data.value
-      }</pre>`
-      pushConsole()
-    }
-  })
 
   const activeBtn = (target: number) => {
     for (const btn of toolBtns) {
@@ -227,9 +201,6 @@ const App = () => {
     toolBtns[5]["disabled"] = disabled
   }
 
-  const aside_ref = useRef<HTMLDivElement>()
-  const asideSize_ref = useRef<HTMLDivElement>()
-
   const setTheme = (theme: "vs" | "vs-dark" | "hc-black") => {
     monaco.editor.setTheme(theme)
     localStorage.setItem(KEYS.__LS_EDITOR_THEME__, theme)
@@ -240,7 +211,10 @@ const App = () => {
     }
   }
 
-  const setEditorSize = (width: number, height: number) => {
+  const aside_ref = useRef<HTMLDivElement>()
+
+  const setEditorSize = (width: number) => {
+    const height = editor.getSize().height
     sec_ref.current.style.width = width + "px"
     editor.setSize(width, height)
     const asideWidth = docWidth - width
@@ -248,7 +222,7 @@ const App = () => {
       diffEditor.setSize(width, height)
       aside_ref.current.style.width = asideWidth + "px"
     }
-    asideSize_ref.current.textContent = `${asideWidth} x ${height}`
+    return `${asideWidth} x ${height}`
   }
 
   const dl_ref = useRef<HTMLAnchorElement>()
@@ -347,13 +321,6 @@ const App = () => {
     }
   }
 
-  // fixed docWidth
-  window.addEventListener("resize", () =>
-    debounce(() => {
-      docWidth = document.documentElement.clientWidth
-    })
-  )
-
   return (
     <div className="App">
       <section ref={sec_ref} className="Main">
@@ -440,90 +407,13 @@ const App = () => {
           onkeyup={() => shouldAutoRun() && debounce(saveModified)}
         />
       </section>
-      <aside ref={aside_ref} className="Aside">
-        <div
-          className="Aside-Btn"
-          ref={el =>
-            addDragListener(
-              el,
-              e => setEditorSize(e.clientX, editorHeight),
-              () => {
-                output_ref.current.style.display = "none"
-                asideSize_ref.current.style.display = "block"
-                aside_console_ref.current.style.display = "none"
-              },
-              e => {
-                asideSize_ref.current.style.display = "none"
-                output_ref.current.style.display = "block"
-                aside_console_ref.current.style.display = "block"
-                localStorage.setItem(
-                  KEYS.__LS_EDITOR_WIDTH__,
-                  String(e.clientX)
-                )
-              }
-            )
-          }
-        />
-        <div className="Aside-Run">
-          <button className="ButtonHigh" onclick={run}>
-            Run
-          </button>
-          <button className="ButtonHigh" onclick={() => download("index")}>
-            Export
-          </button>
-          <div style={{ flexGrow: "1" }} />
-          <div
-            style={{
-              lineHeight: "1.5rem",
-              color: "#d5d5d7",
-              wordBreak: "break-all",
-              userSelect: "none",
-              padding: "0 0.5rem"
-            }}
-          >
-            v{KEYS.__VERSION__} by saber2pr
-          </div>
-        </div>
-        <iframe ref={output_ref} />
-        <div className="Aside-Size" ref={asideSize_ref} />
-        <div ref={aside_console_ref} className="Aside-Console">
-          <div className="Console-Bar">
-            <div style={{ flexGrow: "1" }}>Console</div>
-            <div className="iconfont icon-clear" onclick={clearConsole} />
-            <div
-              className="Console-Btn"
-              ref={el =>
-                addDragListener(
-                  el,
-                  e => {
-                    const clientY = e.clientY
-                    if (clientY >= 21) {
-                      const consHeight = `calc(100vh - ${e.clientY}px + 1.5rem)`
-                      aside_console_ref.current.style.height = consHeight
-                    }
-                  },
-                  () => {
-                    output_ref.current.style.display = "none"
-                    asideSize_ref.current.style.display = "block"
-                  },
-                  e => {
-                    asideSize_ref.current.style.display = "none"
-                    output_ref.current.style.display = "block"
-                    let clientY = e.clientY
-                    clientY = clientY > 21 ? clientY : 21
-                    const consHeight = `calc(100vh - ${clientY}px + 1.5rem)`
-                    localStorage.setItem(
-                      KEYS.__LS_EDITOR_CONS_HEIGHT__,
-                      consHeight
-                    )
-                  }
-                )
-              }
-            />
-          </div>
-          <div ref={console_ref} className="Console-Output" />
-        </div>
-      </aside>
+      <Aside
+        ref={aside_ref}
+        sandboxRef={output_ref}
+        onRun={run}
+        onResize={e => setEditorSize(e.clientX)}
+        onDownload={() => download("index")}
+      />
       <a ref={dl_ref} />
     </div>
   )

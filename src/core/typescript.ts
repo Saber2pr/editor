@@ -2,7 +2,7 @@
  * @Author: saber2pr
  * @Date: 2020-05-05 20:50:32
  * @Last Modified by: saber2pr
- * @Last Modified time: 2020-05-05 21:21:32
+ * @Last Modified time: 2020-05-06 17:52:56
  */
 import { getReferencePaths, resolvePath } from "../utils"
 import { tsxCompilerOptions } from "./options"
@@ -20,7 +20,7 @@ export const compileTS = async (uri: InstanceType<typeof monaco.Uri>) => {
   return files.text
 }
 
-const updateCompilerOptions = (
+export const updateCompilerOptions = (
   options: Parameters<typeof typescriptDefaults.setCompilerOptions>[0]
 ) => {
   const CompilerOptions = typescriptDefaults.getCompilerOptions()
@@ -62,7 +62,3 @@ export const addModuleDeclaration = async (
   const lib = addExtraLib(wrapped, moduleName)
   ExtraLibs[key] = lib
 }
-
-// export api for scripts.
-window["api_addModuleDeclaration"] = addModuleDeclaration
-window["api_updateCompilerOptions"] = updateCompilerOptions

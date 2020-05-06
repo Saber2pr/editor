@@ -61,62 +61,6 @@ body {
   flex-direction: column;
 }
 
-.Aside {
-  flex-grow: 1;
-  position: relative;
-  background-color: inherit;
-  border-left: 1px solid #80808085;
-}
-
-.Aside > iframe {
-  width: 100%;
-  height: 95%;
-  height: calc(100% - 3rem + 1px);
-  border: none;
-  position: absolute;
-  background: white;
-}
-
-.Aside-Btn {
-  float: left;
-  height: 100%;
-}
-
-.Aside-Size {
-  position: absolute;
-  display: none;
-  font-size: 2rem;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding-top: 30vh;
-  color: #80808085;
-  user-select: none;
-}
-
-.Aside-Btn::after {
-  content: "";
-  cursor: col-resize;
-  display: block;
-  height: 100%;
-  width: 8px;
-  position: fixed;
-  margin-left: -4px;
-  z-index: 10;
-}
-
-.Aside-Run {
-  border-bottom: 1px solid #80808085;
-  height: 1.5rem;
-  display: flex;
-  overflow: hidden;
-  background-color: inherit;
-}
-
-.Aside-Run > .ButtonHigh {
-  border-bottom: none;
-}
-
 .ToolBar {
   display: flex;
 }
@@ -128,57 +72,6 @@ body {
 .DiffEditor {
   flex-grow: 1;
   display: none;
-}
-
-.Aside-Console {
-  width: 100%;
-  height: 13.5rem;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  border-top: 1px solid #80808085;
-  transition: transform 0.2s ease-in-out;
-  background: white;
-}
-
-.Console-Btn {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-}
-
-.Console-Btn::after {
-  content: "";
-  width: 100%;
-  height: 8px;
-  position: fixed;
-  margin-top: -4px;
-  cursor: row-resize;
-  z-index: 9;
-}
-
-.Console-Bar {
-  height: 1.5rem;
-  line-height: 1.5rem;
-  border-bottom: 1px solid #80808085;
-  background: #f1f1f1;
-  padding: 0 0.5rem;
-  color: dimgrey;
-  display: flex;
-  position: relative;
-  user-select: none;
-}
-
-.Console-Bar-Btn {
-  cursor: pointer;
-  margin-left: 0.5rem;
-}
-
-.Console-Output {
-  height: 100%;
-  height: calc(100% - 20px);
-  overflow: auto;
-  padding: 0 0.5rem;
 }
 
 #root {
@@ -200,7 +93,7 @@ body {
 }
 
 .icon-clear:before {
-	content: "\e61e";
-	cursor: pointer;
-	font-weight: bold;
+  content: "\e61e";
+  cursor: pointer;
+  font-weight: bold;
 }
