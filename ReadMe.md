@@ -32,7 +32,8 @@ cd editor
 yarn install
 
 # update typescript version
-yarn add monaco-editor monaco-editor-webpack-plugin
+yarn add monaco-editor
+yarn add monaco-editor-webpack-plugin -D
 
 yarn build
 
