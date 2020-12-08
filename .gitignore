@@ -4,4 +4,3 @@ package-lock.json
 build/
 lib/
 yarn.lock
-samples/

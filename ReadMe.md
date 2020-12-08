@@ -19,3 +19,26 @@ yarn install
 
 yarn dev
 ```
+
+# Update
+
+如果我长时间没有维护，导致 typescript 版本过老，按以下办法执行升级：
+
+```bash
+git clone https://github.com/Saber2pr/editor.git
+
+cd editor
+
+yarn install
+
+# update typescript version
+yarn add monaco-editor monaco-editor-webpack-plugin
+
+yarn build
+
+cp -r samples build/samples
+
+cd build
+
+npx serve
+```
