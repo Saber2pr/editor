@@ -1,12 +1,11 @@
 {
-  "name": "@fronted-tsx-developer/text-editor",
+  "name": "@saber2pr/editor",
   "version": "0.0.1",
   "description": "a web ide.",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack -w",
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack",
-    "utils:getIP": "ts-node -p -e 'require(`./src/utils/getPublicIP`)()'"
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "files": [
     "lib/*"
@@ -15,7 +14,7 @@
   "author": "saber2pr",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Fronted-TSX-Developer/tsx-editor.git"
+    "url": "git+https://github.com/Saber2pr/editor.git"
   },
   "license": "ISC",
   "keywords": [
