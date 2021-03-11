@@ -6,30 +6,32 @@
  */
 declare const LOADING: { init(): void; destroy(): void }
 
-import TSX, { useRef, useEffect, render } from "@saber2pr/tsx"
-import "./app.css"
-import { KEYS } from "./constants"
+import './app.css'
+
+import TSX, { render, useEffect, useRef } from '@saber2pr/tsx'
+
 import {
+  Aside,
+  ModuleManager,
   openModel,
   Settings,
   shouldAutoRun,
-  ModuleManager,
-  Aside
-} from "./components"
-import { debounce, addUploadListener, initKeyBoard } from "./utils"
-import { loadSamples, loadScript } from "./samples"
-import { makeSandCode } from "./sandbox"
+} from './components'
+import { KEYS } from './constants'
 import {
-  monaco,
   addExtraLib,
+  addModuleDeclaration,
   compileTS,
-  DiffEditorAPI,
   createDiffEditor,
   createEditor,
+  DiffEditorAPI,
   EditorAPI,
-  addModuleDeclaration,
-  updateCompilerOptions
-} from "./core"
+  monaco,
+  updateCompilerOptions,
+} from './core'
+import { loadSamples, loadScript } from './samples'
+import { makeSandCode } from './sandbox'
+import { addUploadListener, debounce, initKeyBoard } from './utils'
 
 const FILES = {
   current: "typescript",
@@ -126,6 +128,7 @@ const App = () => {
     })
 
     // export apis
+    window["monaco"] = monaco
     window["api_compileTS"] = async () => {
       const result = await compileTS(editor.getModel("typescript").uri)
       console.log(result)

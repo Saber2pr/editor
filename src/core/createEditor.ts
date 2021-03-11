@@ -1,12 +1,12 @@
+import { monaco } from './monaco'
 /*
  * @Author: saber2pr
  * @Date: 2020-04-10 15:05:30
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-05 21:22:53
  */
-import { commonOptions } from "./options"
-import { createTSXModel } from "./typescript"
-import { monaco } from "./monaco"
+import { commonOptions } from './options'
+import { createTSXModel } from './typescript'
 
 interface DefaultValues {
   [type: string]: string

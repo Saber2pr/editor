@@ -6,11 +6,13 @@
  */
 declare const LOADING: { init(): void; destroy(): void }
 
-import TSX, { useRef } from "@saber2pr/tsx"
-import { KEYS } from "../../constants"
-import "./style.css"
-import { readFile } from "../../utils"
-import { addModuleDeclaration, addExtraLib } from "../../core"
+import './style.css'
+
+import TSX, { useRef } from '@saber2pr/tsx'
+
+import { KEYS } from '../../constants'
+import { addExtraLib, addModuleDeclaration } from '../../core'
+import { readFile } from '../../utils'
 
 const getLSAutoRun = () => {
   const ls_auto_run = localStorage.getItem(KEYS.__LS_AUTO_RUN__) as "yes" | "no"

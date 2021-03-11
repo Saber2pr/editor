@@ -1,4 +1,4 @@
-import { FileInfo, readFile } from "./readFile"
+import { FileInfo, readFile } from './readFile'
 
 export const addUploadListener = (callback: (res: FileInfo) => void) => {
   document.addEventListener("dragover", e => e.preventDefault())

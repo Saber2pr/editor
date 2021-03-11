@@ -1,11 +1,12 @@
+import './style.css'
+
 /*
  * @Author: saber2pr
  * @Date: 2020-04-12 15:28:47
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-04-12 15:51:53
  */
-import { render } from "@saber2pr/tsx"
-import "./style.css"
+import { render } from '@saber2pr/tsx'
 
 type ModelAPI = { close: Function }
 

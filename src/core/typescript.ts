@@ -4,9 +4,9 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-06 17:52:56
  */
-import { getReferencePaths, resolvePath } from "../utils"
-import { tsxCompilerOptions } from "./options"
-import { monaco } from "./monaco"
+import { getReferencePaths, resolvePath } from '../utils'
+import { monaco } from './monaco'
+import { tsxCompilerOptions } from './options'
 
 const typescriptDefaults = monaco.languages.typescript.typescriptDefaults
 export const addExtraLib = (content: string, filePath?: string) =>

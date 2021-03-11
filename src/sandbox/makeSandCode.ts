@@ -4,10 +4,10 @@
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-05 20:53:56
  */
-import { KEYS } from "../constants"
-import { enClosure } from "../utils"
-import { ConsoleHook } from "./hooks"
-import { compileTS, EditorAPI } from "../core"
+import { KEYS } from '../constants'
+import { compileTS, EditorAPI } from '../core'
+import { enClosure } from '../utils'
+import { ConsoleHook } from './hooks'
 
 export const makeSandCode = async (
   editor: EditorAPI,

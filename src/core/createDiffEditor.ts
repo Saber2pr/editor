@@ -1,11 +1,11 @@
+import { monaco } from './monaco'
 /*
  * @Author: saber2pr
  * @Date: 2020-05-05 20:49:01
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-05 21:03:26
  */
-import { commonOptions } from "./options"
-import { monaco } from "./monaco"
+import { commonOptions } from './options'
 
 export const createDiffEditor = (
   container: HTMLElement,
