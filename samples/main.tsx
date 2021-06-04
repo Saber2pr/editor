@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
+import { message } from 'antd'
 
 import axios from 'axios'
 // console.log(axios.get)
@@ -14,6 +15,7 @@ const App = ({ github }: App) => {
 
   useEffect(() => {
     btn.current.style.animation = 'shake 2s ease infinite'
+    message.info('hello~ antd design')
   }, [])
 
   return <div>
@@ -26,7 +28,10 @@ const App = ({ github }: App) => {
     <div>
       click to add: {state}
       <div>
-        <button ref={btn} onClick={() => setState(state + 1)}>setState(state + 1)</button>
+        <button ref={btn} onClick={() => {
+          message.info('hello~ antd design')
+          setState(state + 1)
+        }}>setState(state + 1)</button>
       </div>
     </div>
   </div>
