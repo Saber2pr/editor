@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
+import React, { useState, useEffect, useRef } from 'react'
+const mountNode = document.getElementById('root')
+
 import { message } from 'antd'
 
 import axios from 'axios'
@@ -38,4 +40,4 @@ const App = ({ github }: App) => {
 }
 
 ReactDOM.render(<App github="https://github.com/Saber2pr/editor" />,
-  document.getElementById('test'))
+  mountNode)
