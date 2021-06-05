@@ -8,7 +8,7 @@ declare const LOADING: { init(): void; destroy(): void }
 
 import './style.css'
 
-import TSX, { useRef } from '@saber2pr/tsx'
+import React, { useRef } from '@saber2pr/react'
 
 import { KEYS } from '../../constants'
 import { addExtraLib, addModuleDeclaration } from '../../core'

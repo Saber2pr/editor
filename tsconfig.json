@@ -4,7 +4,6 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "jsx": "react",
-    "jsxFactory": "TSX",
     "declaration": true,
     "outDir": "lib",
     "lib": ["dom", "ESNext"]

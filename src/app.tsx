@@ -8,7 +8,8 @@ declare const LOADING: { init(): void; destroy(): void }
 
 import './app.css'
 
-import TSX, { render, useEffect, useRef } from '@saber2pr/tsx'
+import React, { useEffect, useRef } from '@saber2pr/react'
+import ReactDOM from '@saber2pr/react/lib/client'
 
 import {
   Aside,
@@ -54,7 +55,7 @@ const App = () => {
   const toolBar_ref = useRef<HTMLDivElement>()
   let toolBtns: HTMLButtonElement[]
 
-  useEffect(async () => {
+  const init = async () => {
     let defaults = {
       typescript: localStorage.getItem(KEYS.__LS_TS__),
       javascript: localStorage.getItem(KEYS.__LS_JS__),
@@ -160,7 +161,11 @@ const App = () => {
     eval(script)
 
     run()
-  })
+  }
+
+  useEffect(()=> {
+    init()
+  }, [])
 
   const run = async () => {
     output_ref.current.srcdoc = "[TS]: Compiling..."
@@ -422,4 +427,4 @@ const App = () => {
   )
 }
 
-render(<App />, document.getElementById("root"))
+ReactDOM.render(<App />, document.getElementById("root"))
