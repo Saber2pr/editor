@@ -1,21 +1,21 @@
 {
   "name": "o(*≧▽≦)ツ┏━┓",
   "dependencies": {
-    "react": "https://unpkg.com/react/umd/react.production.min.js",
-    "react-dom": "https://unpkg.com/react-dom/umd/react-dom.production.min.js",
-    "axios": "https://unpkg.com/axios/dist/axios.min.js",
-    "moment": "https://unpkg.com/moment/moment.js",
-    "antd": "https://unpkg.com/antd/dist/antd.min.js",
-    "@ant-design/icons": "https://unpkg.com/@ant-design/icons/dist/index.umd.js"
+    "react": "https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js",
+    "react-dom": "https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js",
+    "axios": "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
+    "moment": "https://cdn.jsdelivr.net/npm/moment/moment.js",
+    "antd": "https://cdn.jsdelivr.net/npm/antd/dist/antd.min.js",
+    "@ant-design/icons": "https://cdn.jsdelivr.net/npm/@ant-design/icons/dist/index.umd.js"
   },
   "types": {
-    "react": "https://www.unpkg.com/@types/react/index.d.ts",
-    "react-dom": "https://www.unpkg.com/@types/react-dom/index.d.ts",
-    "csstype": "https://www.unpkg.com/csstype/index.d.ts",
-    "prop-types": "https://www.unpkg.com/@types/prop-types/index.d.ts",
-    "axios": "https://unpkg.com/axios/index.d.ts",
-    "moment": "https://unpkg.com/moment/moment.d.ts",
-    "antd": "https://unpkg.com/antd/lib/index.d.ts",
-    "@ant-design/icons": "https://unpkg.com/@ant-design/icons/lib/icons/index.d.ts"
+    "react": "https://cdn.jsdelivr.net/npm/@types/react/index.d.ts",
+    "react-dom": "https://cdn.jsdelivr.net/npm/@types/react-dom/index.d.ts",
+    "csstype": "https://cdn.jsdelivr.net/npm/csstype/index.d.ts",
+    "prop-types": "https://cdn.jsdelivr.net/npm/@types/prop-types/index.d.ts",
+    "axios": "https://cdn.jsdelivr.net/npm/axios/index.d.ts",
+    "moment": "https://cdn.jsdelivr.net/npm/moment/moment.d.ts",
+    "antd": "https://cdn.jsdelivr.net/npm/antd/lib/index.d.ts",
+    "@ant-design/icons": "https://cdn.jsdelivr.net/npm/@ant-design/icons/lib/icons/index.d.ts"
   }
 }
