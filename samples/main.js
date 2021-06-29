@@ -22,7 +22,7 @@ if (top !== self) {
     const names = Object.keys(types)
     const count = names.length
     let index = 0
-    Promise.all(names.map(name => top.api_addModuleDeclaration(types[name], name)
+    Promise.all(names.map(name => top.api_addModuleDeclaration(types[name], name.startsWith('global:') ? null : name)
       .then(() =>
         console.log(`type(${++index}/${count}): ${info(`[${name}]`)} fetched`))))
       .then(() => {
