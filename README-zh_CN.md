@@ -4,7 +4,7 @@
 
 > a web editor for tsx page writing.
 
-https://fronted-tsx-developer.github.io/tsx-editor-online/
+https://saber2pr.top/editor/
 
 [English]((https://github.com/Saber2pr/editor/blob/master/README-zh_CN.md)) | 简体中文
 

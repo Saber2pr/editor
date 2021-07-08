@@ -4,7 +4,7 @@ Write TypeScript code in the browser, React (TSX) code! Support for compiling an
 
 > a web editor for tsx page writing.
 
-https://fronted-tsx-developer.github.io/tsx-editor-online/
+https://saber2pr.top/editor/
 
 English | [简体中文](https://github.com/Saber2pr/editor/blob/master/README-zh_CN.md)
 
