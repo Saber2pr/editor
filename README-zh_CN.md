@@ -6,7 +6,7 @@
 
 https://saber2pr.top/editor/
 
-[English]((https://github.com/Saber2pr/editor/blob/master/README.md)) | 简体中文
+[English](https://github.com/Saber2pr/editor/blob/master/README.md) | 简体中文
 
 # Start
 
