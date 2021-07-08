@@ -1,8 +1,8 @@
 # tsx-editor
 
-Write TypeScript code in the browser, React (TSX) code! Support for compiling and exporting!
+🌊 a web editor for react/tsx app develop、build !
 
-> a web editor for tsx page writing.
+Write TypeScript code in the browser, React (TSX) code! Support for compiling and exporting!
 
 https://saber2pr.top/editor/
 

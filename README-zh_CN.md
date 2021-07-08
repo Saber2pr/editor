@@ -1,8 +1,8 @@
 # tsx-editor
 
-在浏览器中编写 typescript 代码，react(tsx)代码！支持编译导出！
+🌊 a web editor for react/tsx app develop、build !
 
-> a web editor for tsx page writing.
+在浏览器中编写 typescript 代码，react(tsx)代码！支持编译导出！
 
 https://saber2pr.top/editor/
 
