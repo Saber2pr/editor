@@ -1,12 +1,12 @@
 # tsx-editor
 
-Write TypeScript code in the browser, React (TSX) code! Support for compiling and exporting!
+在浏览器中编写 typescript 代码，react(tsx)代码！支持编译导出！
 
 > a web editor for tsx page writing.
 
 https://fronted-tsx-developer.github.io/tsx-editor-online/
 
-English | [简体中文](https://github.com/Saber2pr/editor/blob/master/README-zh_CN.md)
+[English]((https://github.com/Saber2pr/editor/blob/master/README-zh_CN.md)) | 简体中文
 
 # Start
 
@@ -22,7 +22,7 @@ yarn dev
 
 # Update
 
-If I haven't maintained it for a long time and the TypeScript version is too old, do the following:
+如果我长时间没有维护，导致 typescript 版本过老，按以下办法执行升级：
 
 ```bash
 git clone https://github.com/Saber2pr/editor.git
