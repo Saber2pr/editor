@@ -7,7 +7,7 @@ interface Defaults {
 }
 
 const isProd = process.env.NODE_ENV === 'production'
-const base = isProd ? '//saber2pr.github.io/editor' : ''
+const base = isProd ? '//saber2pr.top/editor' : ''
 
 const samples = [
   "/samples/main.tsx",
