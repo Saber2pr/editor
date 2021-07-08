@@ -6,6 +6,9 @@ interface Defaults {
   json: string
 }
 
+const isProd = process.env.NODE_ENV === 'production'
+const base = isProd ? '//saber2pr.github.io/editor' : ''
+
 const samples = [
   "/samples/main.tsx",
   "/samples/main.js",
@@ -16,7 +19,7 @@ const samples = [
 
 export const loadSamples = async (): Promise<Defaults> => {
   const [typescript, javascript, css, html, json] = await Promise.all(
-    samples.map(sample => fetch(sample).then(res => res.text()))
+    samples.map(sample => fetch(base + sample).then(res => res.text()))
   )
 
   return {
@@ -32,4 +35,4 @@ export const settings = {
   script: "/samples/script.js"
 }
 
-export const loadScript = () => fetch(settings.script).then(res => res.text())
+export const loadScript = () => fetch(base + settings.script).then(res => res.text())
