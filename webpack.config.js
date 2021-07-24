@@ -8,6 +8,11 @@ const extract = new ExtractTextPlugin("style.min.css")
 
 const { WebpackConfig, templateContent } = require("@saber2pr/webpack-configer")
 
+const cdn = '//cdn.jsdelivr.net/gh'
+const username = 'saber2pr'
+const pages_branch = 'gh-pages'
+const repo = 'editor'
+
 module.exports = WebpackConfig({
   entry: {
     shouldPC: "./src/external/shouldPC.ts",
