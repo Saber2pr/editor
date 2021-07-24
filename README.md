@@ -4,7 +4,7 @@
 
 Write TypeScript code in the browser, React (TSX) code! Support for compiling and exporting!
 
-https://saber2pr.top/editor/
+https://editor-saber2pr.vercel.app/
 
 English | [简体中文](https://github.com/Saber2pr/editor/blob/master/README-zh_CN.md)
 
