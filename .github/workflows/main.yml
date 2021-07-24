@@ -1,8 +1,8 @@
 name: Github Pages
 on:
   push:
-    branches:
-      - master
+    tags:
+      - 'v*.*.*'
 jobs:
   Deploy-Pages:
     runs-on: ubuntu-18.04
