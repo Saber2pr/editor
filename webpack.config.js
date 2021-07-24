@@ -26,7 +26,11 @@ module.exports = WebpackConfig({
     filename: "[name].min.js",
     path: path.join(__dirname, "build"),
     library: "[name]",
-    libraryTarget: "global"
+    libraryTarget: "global",
+    publicPath:
+      process.env.NODE_ENV === 'production'
+        ? `${cdn}/${username}/${repo}@${pages_branch}/`
+        : '/',
   },
   module: {
     rules: [
