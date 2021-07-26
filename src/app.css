@@ -1,0 +1,99 @@
+.ButtonHigh {
+  cursor: pointer;
+  color: #d5d5d7;
+  background-color: inherit;
+  line-height: 1.5rem;
+  padding: 0 16px;
+  word-break: keep-all;
+  border: none;
+  border-bottom: 1px solid #80808085;
+  user-select: none;
+}
+
+.ButtonHigh:hover {
+  color: #61dafb;
+}
+
+.ButtonHigh:focus {
+  outline: none;
+}
+
+.ButtonHigh:disabled {
+  cursor: not-allowed;
+}
+
+.ButtonHigh-Active {
+  color: #61dafb;
+  border: none;
+  border-right: 1px solid;
+  border-left: 1px solid;
+  border-color: #80808085;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: 14px;
+}
+
+body {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: white;
+}
+
+.App {
+  height: 100vh;
+  display: flex;
+  background-color: inherit;
+}
+
+.Main {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ToolBar {
+  display: flex;
+}
+
+.Editor {
+  flex-grow: 1;
+}
+
+.DiffEditor {
+  flex-grow: 1;
+  display: none;
+}
+
+#root {
+  background-color: inherit;
+}
+
+@font-face {
+  font-family: "iconfont";
+  src: url("data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAK4AAsAAAAABmgAAAJsAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcApwgQ0BNgIkAwgLBgAEIAWEbQcxG7QFyC6wbdiTQNuFI8RDCy2Z+cO8HOKh2I/19v9FNakmhmSSRROZpJ2QSBCDTYeQqH532WRp6dIxjYos60clc6tO1527Xn/n0+VgO4lSKLAgHEIDG3ACmWaxDOo3AKuvMDc43QbLcNAxsW20Dft9nsvp3VVAgcz/vHKZY9KkARgHFOBeGEVWJJE3jF3wAh8TqNVjW2b98r4FZcleFYhjo4dQLkSlZIVqobLhYIprqFBdXGYfcRV9P76YjjKFipLdsnV0MYHjNzgl5cP/HAYExAjoeAVKTAFJ7DVmN+QEY+bUCuYNACkTb/j/H9vFUS2C/XV2fT3ogrngDZ78UfkLkMiGDM9OuoSyvj4vvtXabf9371auuhOL85ukbtXmmDu8yd/PG0cUiHzvbf5XJkKtdc/bk3t7y+mIoNhXZj/3FEfv/ZJwDPD/styiDIKH7C+6X60uwZOeJQr/PxnmB9W79gW/SDZwIA2FbStSkzUWC11yp26rVYv/4GCr36nGjvsphmodd+Wv0p2hVG2ITMYUKtSZQaVqS6g16ep4nTYsJ7IGE14BQrMPFBrdo9Tsk0zGDyp0+kOl5sih1kFwYZ2RMNWYhkITHK3RjKNQuQ6pxo0N0nN/yHlFxOoQpyaBruWUC1cUEi+xJV3ouohCxVGAl+A58v0IY45mNBZrKhLv2rZqepM1jgKoWsPIkCATaGQNGWORkArGi2rl8w1Em/MNcUdfXbiDsJSZHrkszgDyShsO6nuUV1ILWp0QClJYJIAuwTzi80VQ3DxvhowJy3RCOrbLdkapoVpre33wdyeglm0qwplZqjo3oR4ZFwAA")
+    format("woff2");
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 1rem;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-clear:before {
+  content: "\e61e";
+  cursor: pointer;
+  font-weight: bold;
+}

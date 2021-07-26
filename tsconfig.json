@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "jsx": "react",
+    "jsxFactory": "React",
+    "declaration": true,
+    "outDir": "lib",
+    "lib": ["dom", "ESNext"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "lib", "samples"]
+}
