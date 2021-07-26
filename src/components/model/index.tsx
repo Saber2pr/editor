@@ -6,7 +6,7 @@ import './style.css'
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-04-12 15:51:53
  */
-import ReactDOM from '@saber2pr/react/lib/client'
+import { render } from '@saber2pr/tsx'
 
 type ModelAPI = { close: Function }
 
@@ -21,6 +21,6 @@ export const openModel = (message: (api: ModelAPI) => JSX.Element) => {
 
   const api = { close }
 
-  ReactDOM.render(message(api), container)
+  render(message(api), container)
   return api
 }

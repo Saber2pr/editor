@@ -6,7 +6,7 @@ import './style.css'
  * @Last Modified by: saber2pr
  * @Last Modified time: 2020-05-06 17:57:19
  */
-import React, { useEffect, useRef } from '@saber2pr/react'
+import React, { useEffect, useRef } from '@saber2pr/tsx'
 
 import { KEYS } from '../../constants'
 import { addDragListener } from '../../utils'
@@ -15,8 +15,8 @@ export interface Aside {
   onResize: (event: MouseEvent) => string
   onDownload(): void
   onRun(): void
-  sandboxRef: React.MutableRefObject<HTMLIFrameElement>
-  ref: React.MutableRefObject<HTMLDivElement>
+  sandboxRef: React.RefObj<HTMLIFrameElement>
+  ref: React.RefObj<HTMLDivElement>
 }
 
 export const Aside = ({

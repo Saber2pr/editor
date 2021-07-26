@@ -8,8 +8,7 @@ declare const LOADING: { init(): void; destroy(): void }
 
 import './app.css'
 
-import React, { useEffect, useRef } from '@saber2pr/react'
-import ReactDOM from '@saber2pr/react/lib/client'
+import React, { render, useEffect, useRef } from '@saber2pr/tsx'
 
 import {
   Aside,
@@ -165,7 +164,7 @@ const App = () => {
 
   useEffect(()=> {
     init()
-  }, [])
+  })
 
   const run = async () => {
     output_ref.current.srcdoc = "[TS]: Compiling..."
@@ -427,4 +426,4 @@ const App = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById("root"))
+render(<App />, document.getElementById("root"))
