@@ -4,6 +4,7 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "jsx": "react",
+    "jsxFactory": "React",
     "declaration": true,
     "outDir": "lib",
     "lib": ["dom", "ESNext"]
