@@ -17,7 +17,7 @@ jobs:
         run: yarn build
 
       - name: Prepare Statics
-        run: cp -r samples build && rm .gitignore
+        run: cp -r samples build && cp -r build docs
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
