@@ -1,8 +1,8 @@
 name: Github Pages
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - master
 jobs:
   Deploy-Pages:
     runs-on: ubuntu-18.04
@@ -23,4 +23,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./
