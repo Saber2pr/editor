@@ -273,7 +273,7 @@ const App = () => {
   let diffEditor: DiffEditorAPI = null
 
   const openDiffEditor = () => {
-    diffEditor = createDiffEditor(diff_ref.current, "", "")
+    diffEditor = createDiffEditor(diff_ref.current, "", "", FILES.current)
     window["api_diffEditor"] = diffEditor.instance
     const { width, height } = editor.getSize()
     diffEditor.setSize(width, height)
