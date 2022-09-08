@@ -1,0 +1,20 @@
+name: Docker-Publish
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  Docker-Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        # secrets: DOCKER_USER, DOCKER_TOKEN
+      - name: Build & Publish
+        run: |
+          image=${GITHUB_REPOSITORY#*/}:${GITHUB_REF#refs/*/}
+          docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_TOKEN}}
+          docker image build -t $image .
+          docker tag $image ${{secrets.DOCKER_USER}}/$image
+          docker push ${{secrets.DOCKER_USER}}/$image
