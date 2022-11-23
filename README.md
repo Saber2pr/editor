@@ -43,3 +43,7 @@ cd build
 
 npx serve
 ```
+
+### With ReactDevTools
+
+https://github.com/Saber2pr/react-native-playground
