@@ -5,7 +5,7 @@
     "react-dom": "https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js",
     "axios": "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js",
     "moment": "https://cdn.jsdelivr.net/npm/moment/moment.js",
-    "antd": "https://cdn.jsdelivr.net/npm/antd/dist/antd.min.js",
+    "antd": "https://cdn.jsdelivr.net/npm/antd@4.24.4/dist/antd.min.js",
     "@ant-design/icons": "https://cdn.jsdelivr.net/npm/@ant-design/icons/dist/index.umd.js"
   },
   "types": {
